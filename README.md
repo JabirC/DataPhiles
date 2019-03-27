@@ -31,3 +31,4 @@ Transitions comes into play when there is a shift in the ranks of bars. When a p
 
 By default, our data visualization will keep track of all the patterns that we have come up with. However, we will implement a user interactive feature where the user can explicitly decide which patterns they want to keep track of or which patterns they no longer want to keep track of. We will also allow the users to change the period which we update the values. For example, users can change the period from weeks to months or from months to years and other variations. In addition, users will also be allowed to select a start date and an end date.
 
+![alt text](https://raw.githubusercontent.com/jabirC/DataPhiles/master/mockup.png)
