@@ -1,9 +1,9 @@
 
 //Uncomment code below will show data of scatter plot (i use this as a backbone)
-/*
+
 var model = ["acura	integra","acura	legend","audi 90","audi 100","bmw 535i","buick century","buick lesabre","buick roadmaster","buick riviera","cadillac deville"];
 var power = [140,200,172,172,208,110,170,180,170,200];
-var mpgc = [25,18,20,19,22,22,19,16,19,16];
+var mpgc = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0];
 
 var data = [{"model":model[0],"power":power[0],"mpgc":mpgc[0]}, 
 			{"model":model[1],"power":power[1],"mpgc":mpgc[1]}, 
@@ -16,7 +16,7 @@ var data = [{"model":model[0],"power":power[0],"mpgc":mpgc[0]},
 			{"model":model[8],"power":power[8],"mpgc":mpgc[8]}, 
 			{"model":model[9],"power":power[9],"mpgc":mpgc[9]}, 
 			]
-*/
+
 
 
 function chart(){
@@ -64,7 +64,7 @@ var svg = d3.select("body").append("svg")
       m_max = Math.max.apply(null, mpgc);
 
   xScale.domain([p_min - 1,p_max + 1]);
-  yScale.domain([m_min - 1,m_max + 1]);
+ // yScale.domain([m_min - 1,m_max + 1]);
 
 
   // x-axis  
@@ -101,14 +101,15 @@ var tooltip = d3.select("body").append("div")
     .style("opacity", 0);
 
   // draw dots
-  svg.selectAll(".dot")
+  svg.selectAll(".bar")
       .data(data)
 	  .enter()
-	  		.append("circle")
-			      .attr("class", "dot")
-			      .attr("r", 3.5)
-			      .attr("cx", xMap)//function(d) { return d["power"];})
-			      .attr("cy", yMap)
+	  		.append("rect")
+			     // .attr("class", "dot")
+			      .attr("width", xMap)
+			      .attr("height",30)
+			      .attr("x", 0)//function(d) { return d["power"];})
+			      .attr("y", yMap)
 			      .style("fill", function(d) { return "red";})
 			      .on("mouseover", function(d) {
 				          tooltip.transition()
