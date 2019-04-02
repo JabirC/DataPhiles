@@ -33,3 +33,31 @@ By default, our data visualization will keep track of all the patterns that we h
 
 ### Sketch/Mock-up of envisioned visualization
 ![alt text](https://raw.githubusercontent.com/jabirC/DataPhiles/master/mockup.png)
+
+## LAUNCH CODES
+#### 1. create and open a your virtual environment
+```bash
+$ python3 -m venv venv
+$ . venv/bin/activate
+```
+#### 2. clone the repository
+(https)
+```bash
+$ git clone https://github.com/JabirC/DataPhiles.git
+```
+(ssh)
+```bash
+$ git clone git@github.com:JabirC/DataPhiles.git
+```
+#### 3. install needed pip install
+``` bash
+$ pip install -r DataPhiles/requirements.txt
+```
+#### 4. run the flask app
+```bash
+$ cd DataPhiles/
+$ python app.py
+```
+#### 5. open up the flask app in a preferred browser
+<http://127.0.0.1:5000/>
+
