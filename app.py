@@ -7,7 +7,6 @@ dataset = lottery
 from flask import *
 import os
 import json
-from pymongo import MongoClient
 
 from util import data
 
@@ -21,8 +20,12 @@ def home():
 @app.route('/test', methods = ['GET', 'POST'])
 def test():
 	lottery_data = data.load_data()
-	print(lottery_data)
 	return render_template("test.html")
+
+@app.route('/test2', methods = ['GET'])
+def test2():
+	lottery_data = data.load_data()
+	return render_template("test2.html")
 
 if __name__ == "__main__":
 	app.debug = True
