@@ -5,40 +5,41 @@ var model = ["acura	integra","acura	legend","audi 90","audi 100","bmw 535i","bui
 var power = [140,200,172,172,208,110,170,180,170,200];
 var mpgc = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0];
 
-var data = [{"model":model[0],"power":power[0],"mpgc":mpgc[0]}, 
-			{"model":model[1],"power":power[1],"mpgc":mpgc[1]}, 
-			{"model":model[2],"power":power[2],"mpgc":mpgc[2]}, 
-			{"model":model[3],"power":power[3],"mpgc":mpgc[3]}, 
-			{"model":model[4],"power":power[4],"mpgc":mpgc[4]}, 
-			{"model":model[5],"power":power[5],"mpgc":mpgc[5]}, 
-			{"model":model[6],"power":power[6],"mpgc":mpgc[6]}, 
-			{"model":model[7],"power":power[7],"mpgc":mpgc[7]}, 
-			{"model":model[8],"power":power[8],"mpgc":mpgc[8]}, 
-			{"model":model[9],"power":power[9],"mpgc":mpgc[9]}, 
+var data = [{"model":model[0],"power":power[0],"mpgc":mpgc[0]},
+			{"model":model[1],"power":power[1],"mpgc":mpgc[1]},
+			{"model":model[2],"power":power[2],"mpgc":mpgc[2]},
+			{"model":model[3],"power":power[3],"mpgc":mpgc[3]},
+			{"model":model[4],"power":power[4],"mpgc":mpgc[4]},
+			{"model":model[5],"power":power[5],"mpgc":mpgc[5]},
+			{"model":model[6],"power":power[6],"mpgc":mpgc[6]},
+			{"model":model[7],"power":power[7],"mpgc":mpgc[7]},
+			{"model":model[8],"power":power[8],"mpgc":mpgc[8]},
+			{"model":model[9],"power":power[9],"mpgc":mpgc[9]},
 			]
 
-
+var dates = ["2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019"];
+var nums
 
 function chart(){
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 600 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-/* 
+/*
  * value accessor - returns the value to encode for a given data object.
  * scale - maps value to a visual display encoding, such as a pixel position.
  * map function - maps from data value to display value
  * axis - sets up axis
- */ 
+ */
 
-// setup x 
-var xValue = function(d) { return d["power"];}, 
+// setup x
+var xValue = function(d) { return d["power"];},
 	xScale = d3.scaleLinear().range([0, width]),
 	xMap = function(d) { return xScale(xValue(d));}, // value -> display
     xAxis = d3.axisBottom(xScale);
 
 // setup y
-var yValue = function(d) { return d["mpgc"];}, 
+var yValue = function(d) { return d["mpgc"];},
 	yScale = d3.scaleLinear().range([height, 0]), // value -> display
 	yMap = function(d) { return yScale(yValue(d));}, // value -> display
     yAxis = d3.axisLeft(yScale);
@@ -67,7 +68,7 @@ var svg = d3.select("body").append("svg")
  // yScale.domain([m_min - 1,m_max + 1]);
 
 
-  // x-axis  
+  // x-axis
   svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
@@ -80,7 +81,7 @@ var svg = d3.select("body").append("svg")
       .attr("y", -6)
       .attr("fill","black")
       .style("text-anchor", "end")
-      
+
 
   // y-axis
   svg.append("g")
@@ -94,8 +95,8 @@ var svg = d3.select("body").append("svg")
       .attr("dy", ".71em")
  	  .attr("fill","black")
       .style("text-anchor", "end")
-      
-      
+
+
 var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
@@ -115,7 +116,7 @@ var tooltip = d3.select("body").append("div")
 				          tooltip.transition()
 				               .duration(200)
 				               .style("opacity", .9);
-				          tooltip.html(d["model"] + "<br/> (" + xValue(d) 
+				          tooltip.html(d["model"] + "<br/> (" + xValue(d)
 					        + ", " + yValue(d) + ")")
 				               .style("left", (d3.event.pageX + 5) + "px")
 				               .style("top", (d3.event.pageY - 28) + "px");
@@ -133,4 +134,3 @@ var tooltip = d3.select("body").append("div")
 }
 
 window.onload = chart();
-
