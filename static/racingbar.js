@@ -1,10 +1,14 @@
+
+var data_global;
+
 var chart = function(dataset) {
   var startYear = 2002;
   var height = 600;
 
   const svg = d3.select('svg');
   //console.log(svg);
-  
+  data_global = dataset;
+
   const margin = {
     top: 80,
     right: 0,
@@ -19,11 +23,37 @@ var chart = function(dataset) {
 
   let year = startYear;
   var month_counter = 1;
+  var month_txt = 5;
+  var year_txt = 2002;
   console.log(dataset);
   
-  get_month(dataset[0][0]);
+  //get_month(dataset[0][0]);
+  svg.append("text")
 
-  
+  svg.append("text")
+      .text("month: " + month_txt)
+      .attr('class','title')
+      .attr('y', '500')
+      .attr('x', '150')
+      .attr('id','month')
+      
+  svg.append("text")
+    .text("year: " + year_txt)
+    .attr('class','title')
+    .attr('y', '500')
+    .attr('x', '50')
+    .attr('id','year')
+
+  if(get_month(dataset[dataset.length - month_counter][0]) == month_txt){
+     
+  }
+
+  //while(month_txt < 500){
+    then = Date.now();
+    animation();
+  //  month_txt++;
+  //  console.log(month_txt);
+  //}
   /*
   while(dataset[dataset.length - month_counter]){
     console.log(dataset[dataset.length - month_counter][0]);
@@ -129,8 +159,48 @@ var chart = function(dataset) {
   
 }
 
+var id;
+var month = 5;
+var year = 2002;
+
+var fps, fpsInterval, startTime, now, then, elapsed;
+fpsInterval = 700;
+
+var animation = function(){
+  cancelAnimationFrame(id);
+
+  now = Date.now();
+  elapsed = now - then;
+  console.log(elapsed);
+  if (elapsed > fpsInterval) {
+          const svg = d3.select('svg');
+          //console.log("hello");
+          if(month > 12){
+              month = 1;
+              year++;
+            svg.selectAll('#year')
+             .text("year: " + year)
+          }
+
+          svg.selectAll('#month')
+             .text("month: " + month)
+          
+          console.log(data_global[0][0]);
+
+          month++;
+      then = now - (elapsed % fpsInterval);
+  }
+
+  id = requestAnimationFrame(animation);
+}
+
+var get_year = function(year){
+  year = year.substring(0,3);
+  return parseInt(year);
+}
+
 var get_month = function(year){
   year = year.substring(5,7);
-  console.log(year);
+  //console.log(year);
   return parseInt(year);
 }
