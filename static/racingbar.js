@@ -6,7 +6,15 @@ var data_global;
 
 var items = [];
 
+var uni_data = Array(70);
+
+
 var chart = function(dataset) {
+
+
+
+
+
   var startYear = 2002;
   var height = 600;
 
@@ -263,6 +271,9 @@ var top_1 = function(){
   console.log("Current Top 1 number is: " + (index + 1));
 }
 
+var holder = [];
+var holder_d = [];
+
 var top_6 = function(){
   var big_1 = 0;
   var big_2 = 0;
@@ -279,7 +290,6 @@ var top_6 = function(){
   var num_4 = 0;
 
   var i = 0;
-  var holder = [];
   var t;
 
   while(i < items.length){
@@ -339,6 +349,14 @@ var top_6 = function(){
   holder[3] = num_4;
   holder[4] = num_5;
   holder[5] = num_6;
+  
+  holder_d[0] = big_1;
+  holder_d[1] = big_2;
+  holder_d[2] = big_3;
+  holder_d[3] = big_4;
+  holder_d[4] = big_5;
+  holder_d[5] = big_6;
+  
   console.log("Current Top 6 number is: " + holder[0].toString() + " " + 
     holder[1].toString() + " " + holder[2].toString() + " " + holder[3].toString() +
     " " + holder[4].toString() + " " + holder[5].toString());
