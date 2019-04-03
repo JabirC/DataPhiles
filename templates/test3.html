@@ -1,1 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="google-site-verification" content="Cb1i2q7oVgeeYvCfXyzou6YrKo5cPOGleoeIojAGqLM" />
+<meta name="description" content="Bar chart race &#x2014; the most populous cities in the world">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:title" content="Bar chart race &#x2014; the most populous cities in the world">
+<meta property="og:description" content="An Observable notebook by johnburnmurdoch.">
+<meta property="og:image" content="https://static.observableusercontent.com/thumbnail/8a48e2756b668b52aa7d7cf4fc28b23d07301d1ac606520b2a469075a816720a.jpg">
+<meta property="article:published_time" content="2019-03-18T07:56:32.967Z">
+<meta property="article:modified_time" content="2019-03-18T09:20:07.481Z">
+<link rel="prefetch" href="https://static.observableusercontent.com/worker/worker.4f76ff4b6599860970d70d812dfdace216189fd6ab7310f27bac6991c760da4d.js">
+<link rel="prefetch" href="https://johnburnmurdoch.static.observableusercontent.com/worker/worker.935af58855b5c0beb69da1099b8a8f0ff74af9be0503072d7faa795179cbbaa3.html">
+<link rel="preload" href="https://api.observablehq.com/document/@johnburnmurdoch/bar-chart-race-the-most-populous-cities-in-the-world" crossorigin="use-credentials" as="fetch">
+<title>Bar chart race &#x2014; the most populous cities in the world / johnburnmurdoch / Observable</title>
+<link rel="stylesheet" type="text/css" href="https://static.observablehq.com/style.313e4cfca3be90d5b950da82ca6f7e9c6d3f7ec561bce2d09569d8b4efb688a1.css">
+<link rel="apple-touch-icon" href="https://static.observablehq.com/favicon-512.e85350a27dfadeea7c7c78c797c24419525df5579de174d86d258c40ae57473a.png">
+<link rel="icon" type="image/png" href="https://static.observablehq.com/favicon-512.e85350a27dfadeea7c7c78c797c24419525df5579de174d86d258c40ae57473a.png" sizes="512x512">
+<link rel="search" type="application/opensearchdescription+xml" href="https://static.observablehq.com/opensearch.2f2ef9951b0f956fdefad21904e009bdc07d195eb7bd756829e83523fd64ea39.xml" title="Observable search">
+</head>
+<body class="sans-serif bg-near-white">
+<div  id="app"></div>
+<div class="modal"></div>
+<div class="overlay" class="absolute top-0 left-0"></div>
 
+<script src="https://static.observablehq.com/bundle.3d56c053b0224ecb232e0e211fe795b0f32be27c217954b694f0a2577a2c3e23.js" integrity="sha512-g4S46TDvt8l3yP1cNC8lODp+xOh2NH9/XMuCLib92Gj8LV9Wr4samMv/Mrkixc5ZoWOCv4uOaMur1IWQO67NkA==" crossorigin></script>
+<script async src="https://www.google-analytics.com/analytics.js"></script><script type="application/ld+json">{"@context":"http:\/\/schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/observablehq.com\/@johnburnmurdoch\/bar-chart-race-the-most-populous-cities-in-the-world"},"headline":"Bar chart race — the most populous cities in the world","image":["https:\/\/static.observableusercontent.com\/thumbnail\/8a48e2756b668b52aa7d7cf4fc28b23d07301d1ac606520b2a469075a816720a.jpg"],"datePublished":"2019-03-18T07:56:32.967Z","dateModified":"2019-03-18T09:20:07.481Z","author":{"@type":"Person","name":"johnburnmurdoch"},"publisher":{"@type":"Organization","name":"Observable","logo":{"@type":"ImageObject","url":"https:\/\/static.observablehq.com\/favicon-512.e85350a27dfadeea7c7c78c797c24419525df5579de174d86d258c40ae57473a.png"}}}</script><noscript><p>Bar chart race — the most populous cities in the world</p>
+<pre>html&#x60;&lt;style&gt;
+text{
+  font-size: 16px;
+  font-family: Open Sans, sans-serif;
+}
+text.title{
+  font-size: 28px;
+  font-weight: 600;
+}
+text.subTitle{
+  font-weight: 500;
+  fill: #777777;
+}
+text.label{
+  font-size: 18px;
+}
+.map-legend text{
+  font-size: 14px;
+  fill: #777777;
+}
+text.caption{
+  font-weight: 400;
+  font-size: 14px;
+  fill: #999999;
+}
+text.yearText{
+  font-size: 96px;
+  font-weight: 700;
+  fill: #cccccc;
+}
+text.yearIntro{
+  font-size: 48px;
+  font-weight: 700;
+  fill: #cccccc;
+}
+.tick text {
+  fill: #777777;
+}
+.xAxis .tick:nth-child(2) text {
+  text-anchor: start;
+}
+.tick line {
+  shape-rendering: CrispEdges;
+  stroke: #dddddd;
+}
+.tick line.origin{
+  stroke: #aaaaaa;
+}
+path.domain{
+  display: none;
+}
+&lt;/style&gt;&#x60;</pre>
+<pre>tickDuration = 250;</pre>
+<pre>top_n = 10;</pre>
+<pre>startYear = 1500;</pre>
+<pre>endYear = 2018;</pre>
+<pre>chart = {
+  const svg = d3.select(DOM.svg(width, height));
+  
+  const margin = {
+    top: 80,
+    right: 0,
+    bottom: 5,
+    left: 0
+  };
+  
+  let barPadding = (height-(margin.bottom+margin.top))/(top_n*5);
+  
+  let title = svg.append(&#x27;text&#x27;)
+    .attrs({
+      class: &#x27;title&#x27;,
+      y: 24
+    })
+    .html(&#x27;The most populous cities in the world from 1500 to 2018&#x27;);
+  
+  haloHighlight(title, 250, 2, 1, &#x27;#000000&#x27;);
+  
+  let subTitle = svg.append(&#x27;text&#x27;)
+    .attrs({
+      class: &#x27;subTitle&#x27;,
+      y: 55
+    })
+    .html(&#x27;Population (thousands)&#x27;);
+  
+  haloHighlight(subTitle, 1750, 1, 1, &#x27;#777777&#x27;);
+
+  let year = startYear;
+  
+  dataset.forEach(d =&gt; {
+    d.value = +d.value,
+    d.lastValue = +d.lastValue,
+    d.value = isNaN(d.value) ? 0 : d.value,
+    d.year = +d.year,
+    // d.colour = d3.hsl(Math.random()*360,0.75,0.75)
+    d.colour = &quot;#C8BDFF&quot;
+  });
+  
+  let yearSlice = dataset.filter(d =&gt; d.year == year &amp;&amp; !isNaN(d.value))
+    .sort((a,b) =&gt; b.value - a.value)
+    .slice(0,top_n);
+  
+  yearSlice.forEach((d,i) =&gt; d.rank = i);
+  
+  let x = d3.scaleLinear()
+    .domain([0, d3.max(yearSlice, d =&gt; d.value)])
+    .range([margin.left, width-margin.right-65]);
+  
+  let y = d3.scaleLinear()
+    .domain([top_n, 0])
+    .range([height-margin.bottom, margin.top]);
+  
+  let groups = dataset.map(d =&gt; d.group);
+  groups = [...new Set(groups)];
+  
+  let colourScale = d3.scaleOrdinal()
+    .range([&quot;#adb0ff&quot;, &quot;#ffb3ff&quot;, &quot;#90d595&quot;, &quot;#e48381&quot;, &quot;#aafbff&quot;, &quot;#f7bb5f&quot;, &quot;#eafb50&quot;])
+    .domain([&quot;India&quot;,&quot;Europe&quot;,&quot;Asia&quot;,&quot;Latin America&quot;,&quot;Middle East&quot;,&quot;North America&quot;,&quot;Africa&quot;]);
+    // .domain(groups);
+  
+  let xAxis = d3.axisTop()
+    .scale(x)
+    .ticks(width &gt; 500 ? 5:2)
+    .tickSize(-(height-margin.top-margin.bottom))
+    .tickFormat(d =&gt; d3.format(&#x27;,&#x27;)(d));
+  
+  svg.append(&#x27;g&#x27;)
+    .attrs({
+      class: &#x27;axis xAxis&#x27;,
+      transform: &#x60;translate(0, ${margin.top})&#x60;
+    })
+    .call(xAxis)
+      .selectAll(&#x27;.tick line&#x27;)
+      .classed(&#x27;origin&#x27;, d =&gt; d == 0);
+  
+  svg.selectAll(&#x27;rect.bar&#x27;)
+    .data(yearSlice, d =&gt; d.name)
+    .enter()
+    .append(&#x27;rect&#x27;)
+    .attrs({
+      class: &#x27;bar&#x27;,
+      x: x(0)+1,
+      width: d =&gt; x(d.value)-x(0)-1,
+      y: d =&gt; y(d.rank)+5,
+      height: y(1)-y(0)-barPadding
+    })
+    .styles({
+      fill: d =&gt; colourScale(d.group)
+      // fill: d =&gt; d.colour
+    });
+  
+  svg.selectAll(&#x27;text.label&#x27;)
+    .data(yearSlice, d =&gt; d.name)
+    .enter()
+    .append(&#x27;text&#x27;)
+    .attrs({
+      class: &#x27;label&#x27;,
+      transform: d =&gt; &#x60;translate(${x(d.value)-5}, ${y(d.rank)+5+((y(1)-y(0))/2)-8})&#x60;,
+      &#x27;text-anchor&#x27;: &#x27;end&#x27;
+    })
+    .selectAll(&#x27;tspan&#x27;)
+    .data(d =&gt; [{text: d.name, opacity: 1, weight:600}, {text: d.subGroup, opacity: 1, weight:400}])
+    .enter()
+    .append(&#x27;tspan&#x27;)
+    .attrs({
+      x: 0,
+      dy: (d,i) =&gt; i*16
+    })
+    .styles({
+      // opacity: d =&gt; d.opacity,
+      fill: d =&gt; d.weight == 400 ? &#x27;#444444&#x27;:&#x27;&#x27;,
+      &#x27;font-weight&#x27;: d =&gt; d.weight,
+      &#x27;font-size&#x27;: d =&gt; d.weight == 400 ? &#x27;12px&#x27;:&#x27;&#x27;
+    })
+    .html(d =&gt; d.text);
+  
+  svg.selectAll(&#x27;text.valueLabel&#x27;)
+    .data(yearSlice, d =&gt; d.name)
+    .enter()
+    .append(&#x27;text&#x27;)
+    .attrs({
+      class: &#x27;valueLabel&#x27;,
+      x: d =&gt; x(d.value)+5,
+      y: d =&gt; y(d.rank)+5+((y(1)-y(0))/2)+1,
+    })
+    .text(d =&gt; d3.format(&#x27;,&#x27;)(d.lastValue));
+  
+  let credit = svg.append(&#x27;text&#x27;)
+    .attrs({
+      class: &#x27;caption&#x27;,
+      x: width,
+      y: height-28
+    })
+    .styles({
+      &#x27;text-anchor&#x27;: &#x27;end&#x27;
+    })
+    .html(&#x27;Graphic: @jburnmurdoch&#x27;)
+    .call(halo, 10);
+  
+  let sources = svg.append(&#x27;text&#x27;)
+    .attrs({
+      class: &#x27;caption&#x27;,
+      x: width,
+      y: height-6
+    })
+    .styles({
+      &#x27;text-anchor&#x27;: &#x27;end&#x27;
+    })
+    .html(&#x27;Sources: Reba, M. L., F. Reitsma, and K. C. Seto. 2018; Demographia&#x27;)
+    .call(halo, 10);
+  
+  let yearIntro = svg.append(&#x27;text&#x27;)
+    .attrs({
+      class: &#x27;yearIntro&#x27;,
+      x: width-225,
+      y: height-195
+    })
+    .styles({
+      &#x27;text-anchor&#x27;: &#x27;end&#x27;
+    })
+    .html(&#x27;Year: &#x27;);
+  
+  haloHighlight(yearIntro, 3000, 3, 1, &#x27;#cccccc&#x27;);
+  
+  let yearText = svg.append(&#x27;text&#x27;)
+    .attrs({
+      class: &#x27;yearText&#x27;,
+      x: width-225,
+      y: height-195
+    })
+    // .styles({
+    //   &#x27;text-anchor&#x27;: &#x27;end&#x27;
+    // })
+    .html(~~year);
+  
+  yearText.call(halo, 10);
+  
+  haloHighlight(yearText, 3000, 8, 1, &#x27;#cccccc&#x27;);
+  
+  let regions = world_simplified.objects.ne_10m_admin_0_countries.geometries.map(d =&gt; d.properties.REGION_WB);
+  regions = [...new Set(regions)];
+  
+  const path = d3.geoPath()
+    .projection(projection);
+ 
+  let mapLegend = svg.append(&#x27;g&#x27;)
+    .attrs({
+      class: &#x27;map-legend&#x27;,
+      transform: &#x60;translate(${width-225}, ${height-160})&#x60;
+    });
+  
+  mapLegend
+    .append(&#x27;rect&#x27;)
+    .attrs({
+      x: 0,
+      y: -20,
+      width: 224,
+      height: 130
+    })
+    .styles({
+      fill: &#x27;#ffffff&#x27;,
+      stroke: &#x27;#dddddd&#x27;
+    });
+  
+  let mapSubtitle = mapLegend
+    .append(&#x27;text&#x27;)
+    .attrs({
+      x: 5,
+      y: -5
+    })
+    .html(&#x27;Bar colours represent regions&#x27;);
+
+  mapSubtitle.call(halo, 5);
+  
+  haloHighlight(mapSubtitle, 4500, 1, 1, &#x27;#777777&#x27;);
+  
+  mapLegend
+    .append(&#x27;path&#x27;)
+    .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;South Asia&#x27;)))
+    .attrs({
+      d: path,
+      fill: colourScale(&#x27;India&#x27;)
+    });
+  
+  mapLegend
+    .append(&#x27;path&#x27;)
+    .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;East Asia &amp; Pacific&#x27;)))
+    .attrs({
+      d: path,
+      fill: colourScale(&#x27;Asia&#x27;)
+    });
+  
+  mapLegend
+    .append(&#x27;path&#x27;)
+    .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;Europe &amp; Central Asia&#x27; &amp;&amp; d.properties.ADMIN != &#x27;Greenland&#x27;)))
+    .attrs({
+      d: path,
+      fill: colourScale(&#x27;Europe&#x27;)
+    });
+  
+  mapLegend
+    .append(&#x27;path&#x27;)
+    .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;North America&#x27;)))
+    .attrs({
+      d: path,
+      fill: colourScale(&#x27;North America&#x27;)
+    });
+  
+  mapLegend
+    .append(&#x27;path&#x27;)
+    .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;Middle East &amp; North Africa&#x27;)))
+    .attrs({
+      d: path,
+      fill: colourScale(&#x27;Middle East&#x27;)
+    });
+  
+  mapLegend
+    .append(&#x27;path&#x27;)
+    .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;Sub-Saharan Africa&#x27;)))
+    .attrs({
+      d: path,
+      fill: colourScale(&#x27;Africa&#x27;)
+    });
+  
+  mapLegend
+    .append(&#x27;path&#x27;)
+    .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;Latin America &amp; Caribbean&#x27;)))
+    .attrs({
+      d: path,
+      fill: colourScale(&#x27;Latin America&#x27;)
+    });
+  
+  mapLegend
+    .selectAll(&#x27;circle&#x27;)
+    .data(yearSlice, d =&gt; d.name)
+    .enter()
+    .append(&#x27;circle&#x27;)
+    .attrs({
+      class: &#x27;cityMarker&#x27;,
+      cx: d =&gt; projection([d.lon, d.lat])[0],
+      cy: d =&gt; projection([d.lon, d.lat])[1],
+      r: 3
+    })
+    .styles({
+      stroke: &#x27;#666666&#x27;,
+      fill: &#x27;#000000&#x27;,
+      &#x27;fill-opacity&#x27;: 0.3
+    });
+  
+  d3.timeout(_ =&gt; {
+    
+    svg.selectAll(&#x27;.yearIntro&#x27;)
+      .transition()
+      .duration(1000)
+      .ease(d3.easeLinear)
+      .styles({
+        opacity: 0
+      });
+  
+    let ticker = d3.interval(e =&gt; {
+
+      yearSlice = dataset.filter(d =&gt; d.year == year &amp;&amp; !isNaN(d.value))
+        .sort((a,b) =&gt; b.value - a.value)
+        .slice(0,top_n);
+
+      yearSlice.forEach((d,i) =&gt; d.rank = i);
+
+      x.domain([0, d3.max(yearSlice, d =&gt; d.value)]);
+
+      svg.select(&#x27;.xAxis&#x27;)
+        .transition()
+        .duration(tickDuration)
+        .ease(d3.easeLinear)
+        .call(xAxis);
+
+      let bars = svg.selectAll(&#x27;.bar&#x27;).data(yearSlice, d =&gt; d.name);
+
+      bars
+        .enter()
+        .append(&#x27;rect&#x27;)
+        .attrs({
+          class: d =&gt; &#x60;bar ${d.name.replace(/\s/g,&#x27;_&#x27;)}&#x60;,
+          x: x(0)+1,
+          width: d =&gt; x(d.value)-x(0)-1,
+          y: d =&gt; y(top_n+1)+5,
+          height: y(1)-y(0)-barPadding
+        })
+        .styles({
+          fill: d =&gt; colourScale(d.group)
+          // fill: d =&gt; d.colour
+        })
+        .transition()
+          .duration(tickDuration)
+          .ease(d3.easeLinear)
+          .attrs({
+            y: d =&gt; y(d.rank)+5
+          });
+
+      bars
+        .transition()
+          .duration(tickDuration)
+          .ease(d3.easeLinear)
+          .attrs({
+            width: d =&gt; x(d.value)-x(0)-1,
+            y: d =&gt; y(d.rank)+5
+          });
+
+      bars
+        .exit()
+        .transition()
+          .duration(tickDuration)
+          .ease(d3.easeLinear)
+          .attrs({
+            width: d =&gt; x(d.value)-x(0)-1,
+            y: d =&gt; y(top_n+1)+5
+          })
+          .remove();
+
+      let labels = svg.selectAll(&#x27;.label&#x27;).data(yearSlice, d =&gt; d.name);
+
+      labels
+        .enter()
+        .append(&#x27;text&#x27;)
+        .attrs({
+          class: &#x27;label&#x27;,
+          transform: d =&gt; &#x60;translate(${x(d.value)-5}, ${y(top_n+1)+5+((y(1)-y(0))/2)-8})&#x60;,
+          &#x27;text-anchor&#x27;: &#x27;end&#x27;
+        })
+        .html(&#x27;&#x27;)    
+        .transition()
+          .duration(tickDuration)
+          .ease(d3.easeLinear)
+          .attrs({
+            transform: d =&gt; &#x60;translate(${x(d.value)-5}, ${y(d.rank)+5+((y(1)-y(0))/2)-8})&#x60;
+          });
+
+      let tspans = labels
+        .selectAll(&#x27;tspan&#x27;)
+        .data(d =&gt; [{text: d.name, opacity: 1, weight:600}, {text: d.subGroup, opacity: 1, weight:400}]);
+
+      tspans.enter()
+        .append(&#x27;tspan&#x27;)
+        .html(d =&gt; d.text)
+        .attrs({
+          x: 0,
+          dy: (d,i) =&gt; i*16
+        })
+        .styles({
+          // opacity: d =&gt; d.opacity,
+          fill: d =&gt; d.weight == 400 ? &#x27;#444444&#x27;:&#x27;&#x27;,
+          &#x27;font-weight&#x27;: d =&gt; d.weight,
+          &#x27;font-size&#x27;: d =&gt; d.weight == 400 ? &#x27;12px&#x27;:&#x27;&#x27;
+        });
+
+      tspans
+        .html(d =&gt; d.text)
+        .attrs({
+          x: 0,
+          dy: (d,i) =&gt; i*16
+        })
+        .styles({
+          // opacity: d =&gt; d.opacity,
+          fill: d =&gt; d.weight == 400 ? &#x27;#444444&#x27;:&#x27;&#x27;,
+          &#x27;font-weight&#x27;: d =&gt; d.weight,
+          &#x27;font-size&#x27;: d =&gt; d.weight == 400 ? &#x27;12px&#x27;:&#x27;&#x27;
+        });
+
+      tspans.exit()
+        .remove();
+
+      labels
+        .transition()
+        .duration(tickDuration)
+          .ease(d3.easeLinear)
+          .attrs({
+            transform: d =&gt; &#x60;translate(${x(d.value)-5}, ${y(d.rank)+5+((y(1)-y(0))/2)-8})&#x60;
+          });
+
+      labels
+        .exit()
+        .transition()
+          .duration(tickDuration)
+          .ease(d3.easeLinear)
+          .attrs({
+            transform: d =&gt; &#x60;translate(${x(d.value)-8}, ${y(top_n+1)+5})&#x60;
+          })
+          .remove();
+
+      let valueLabels = svg.selectAll(&#x27;.valueLabel&#x27;).data(yearSlice, d =&gt; d.name);
+
+      valueLabels
+        .enter()
+        .append(&#x27;text&#x27;)
+        .attrs({
+          class: &#x27;valueLabel&#x27;,
+          x: d =&gt; x(d.value)+5,
+          y: d =&gt; y(top_n+1)+5,
+        })
+        .text(d =&gt; d3.format(&#x27;,.0f&#x27;)(d.lastValue))
+        .transition()
+          .duration(tickDuration)
+          .ease(d3.easeLinear)
+          .attrs({
+            y: d =&gt; y(d.rank)+5+((y(1)-y(0))/2)+1
+          });
+
+      valueLabels
+        .transition()
+          .duration(tickDuration)
+          .ease(d3.easeLinear)
+          .attrs({
+            x: d =&gt; x(d.value)+5,
+            y: d =&gt; y(d.rank)+5+((y(1)-y(0))/2)+1
+          })
+          .tween(&quot;text&quot;, function(d) {
+            let i = d3.interpolateRound(d.lastValue, d.value);
+            return function(t) {
+              this.textContent = d3.format(&#x27;,&#x27;)(i(t));
+            };
+          });
+
+      valueLabels
+        .exit()
+        .transition()
+          .duration(tickDuration)
+          .ease(d3.easeLinear)
+          .attrs({
+            x: d =&gt; x(d.value)+5,
+            y: d =&gt; y(top_n+1)+5
+          })
+          .remove();
+
+      let cityMarkers = svg.select(&#x27;.map-legend&#x27;).selectAll(&#x27;.cityMarker&#x27;).data(yearSlice, d =&gt; d.name);
+
+      cityMarkers
+        .enter()
+        .append(&#x27;circle&#x27;)
+        .attrs({
+          class: &#x27;cityMarker&#x27;,
+          cx: d =&gt; projection([d.lon, d.lat])[0],
+          cy: d =&gt; projection([d.lon, d.lat])[1],
+          r: 0
+        })
+        .styles({
+          stroke: &#x27;#000000&#x27;,
+          fill: &#x27;none&#x27;
+        })
+        .transition()
+          .duration(tickDuration)
+          .ease(d3.easeLinear)
+          .attrs({
+            r: 10
+          });
+
+      cityMarkers
+        .attrs({
+          class: &#x27;cityMarker&#x27;,
+          cx: d =&gt; projection([d.lon, d.lat])[0],
+          cy: d =&gt; projection([d.lon, d.lat])[1],
+          r: 3
+        })
+        .styles({
+          stroke: &#x27;#666666&#x27;,
+          fill: &#x27;#000000&#x27;,
+          &#x27;fill-opacity&#x27;: 0.3
+        })
+        .transition()
+          .duration(tickDuration)
+          .ease(d3.easeLinear)
+          .attrs({
+            r: 3
+          });
+
+      cityMarkers
+        .exit()
+        .transition()
+          .duration(tickDuration)
+          .ease(d3.easeLinear)
+          .attrs({
+            r: 0
+          })
+          .remove();
+
+      yearText.html(~~year);
+
+      if(year == endYear) ticker.stop();
+      year = year + 1;
+    },tickDuration);
+  
+  }, 6000);
+
+  return svg.node();
+}</pre>
+<pre>height = 600</pre>
+<pre>dataset = d3.csv(&#x27;https://gist.githubusercontent.com/johnburnmurdoch/4199dbe55095c3e13de8d5b2e5e5307a/raw/fa018b25c24b7b5f47fd0568937ff6c04e384786/city_populations&#x27;)</pre>
+<pre>haloHighlight = function(text, delay, strokeWidth=1, opacity=1, color=&#x27;#000000&#x27;) {
+  let textObject = text.select(function() { return this.parentNode.insertBefore(this.cloneNode(true), this); })
+    .styles({
+      fill: &#x27;#ffffff&#x27;,
+      stroke: color,
+      &#x27;stroke-width&#x27;: 0,
+      &#x27;stroke-linejoin&#x27;: &#x27;round&#x27;,
+      opacity: opacity
+    });
+  textObject
+    .transition()
+      .ease(d3.easeLinear)
+      .delay(delay)
+      .duration(250)
+      .styles({
+        &#x27;stroke-width&#x27;: strokeWidth
+      })
+      .transition()
+        .ease(d3.easeLinear)
+        .delay(500)
+        .duration(250)
+        .styles({
+          &#x27;stroke-width&#x27;: 0
+        });
+}</pre>
+<pre>// This is a lightly modified version of Mike Bostock’s text halo function from @d3/connected-scatterplot
+halo = function(text, strokeWidth, color=&#x27;#ffffff&#x27;) {
+  text.select(function() { return this.parentNode.insertBefore(this.cloneNode(true), this); })
+    .styles({
+      fill: color,
+      stroke: color,
+      &#x27;stroke-width&#x27;: strokeWidth,
+      &#x27;stroke-linejoin&#x27;: &#x27;round&#x27;,
+      opacity: 1
+    });
+}</pre>
+<pre>projection = d3.geoNaturalEarth1()
+  .fitSize([220, 125], land)</pre>
+<pre>land = topojson.feature(world_simplified, {
+    type: &#x27;GeometryCollection&#x27;,
+    geometries: world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; [&#x27;Antarctica&#x27;,&#x27;Greenland&#x27;].includes(d.properties.ADMIN))
+  });</pre>
+<pre>world = d3.json(&#x27;https://gist.githubusercontent.com/johnburnmurdoch/b6a18add7a2f8ee87a401cb3055ccb7b/raw/f46c5c442c5191afc105b934b4b68c653545b7c1/ne_10m_simplified.json&#x27;)</pre>
+<pre>world_simplified = {
+  let word_simplified = topojson.presimplify(world);
+  let min_weight = topojson.quantile(word_simplified, 0.3);
+  word_simplified = topojson.simplify(word_simplified, min_weight);
+  
+  let land = word_simplified;  
+  
+  return land
+}</pre>
+<pre>topojson = require(&#x27;topojson-client@3&#x27;, &#x27;topojson-simplify@3&#x27;)</pre>
+<pre>d3 = require(&#x27;d3-scale&#x27;,&#x27;d3-array&#x27;,&#x27;d3-fetch&#x27;,&#x27;d3-selection&#x27;,&#x27;d3-timer&#x27;,&#x27;d3-color&#x27;,&#x27;d3-format&#x27;,&#x27;d3-ease&#x27;,&#x27;d3-interpolate&#x27;,&#x27;d3-axis&#x27;, &#x27;d3-geo&#x27;, &#x27;d3-selection-multi&#x27;);</pre></noscript>
