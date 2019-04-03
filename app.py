@@ -22,13 +22,17 @@ def home():
 def test():
 	lottery_data = data.load_data()
 	pprint.pprint(lottery_data)
-	return render_template("test.html")
+	return render_template("test.html", data = json.dumps(lottery_data))
 
 @app.route('/test2', methods = ['GET'])
 def test2():
 	lottery_data = data.load_data()
 	pprint.pprint(lottery_data)
 	return render_template("test2.html",data=json.dumps(lottery_data))
+
+@app.route('/test3', methods=['GET','POST'])
+def test3():
+	return render_template("test3.html")
 
 if __name__ == "__main__":
 	app.debug = True

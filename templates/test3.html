@@ -85,36 +85,36 @@ path.domain{
 <pre>endYear = 2018;</pre>
 <pre>chart = {
   const svg = d3.select(DOM.svg(width, height));
-  
+
   const margin = {
     top: 80,
     right: 0,
     bottom: 5,
     left: 0
   };
-  
+
   let barPadding = (height-(margin.bottom+margin.top))/(top_n*5);
-  
+
   let title = svg.append(&#x27;text&#x27;)
     .attrs({
       class: &#x27;title&#x27;,
       y: 24
     })
     .html(&#x27;The most populous cities in the world from 1500 to 2018&#x27;);
-  
+
   haloHighlight(title, 250, 2, 1, &#x27;#000000&#x27;);
-  
+
   let subTitle = svg.append(&#x27;text&#x27;)
     .attrs({
       class: &#x27;subTitle&#x27;,
       y: 55
     })
     .html(&#x27;Population (thousands)&#x27;);
-  
+
   haloHighlight(subTitle, 1750, 1, 1, &#x27;#777777&#x27;);
 
   let year = startYear;
-  
+
   dataset.forEach(d =&gt; {
     d.value = +d.value,
     d.lastValue = +d.lastValue,
@@ -123,35 +123,35 @@ path.domain{
     // d.colour = d3.hsl(Math.random()*360,0.75,0.75)
     d.colour = &quot;#C8BDFF&quot;
   });
-  
+
   let yearSlice = dataset.filter(d =&gt; d.year == year &amp;&amp; !isNaN(d.value))
     .sort((a,b) =&gt; b.value - a.value)
     .slice(0,top_n);
-  
+
   yearSlice.forEach((d,i) =&gt; d.rank = i);
-  
+
   let x = d3.scaleLinear()
     .domain([0, d3.max(yearSlice, d =&gt; d.value)])
     .range([margin.left, width-margin.right-65]);
-  
+
   let y = d3.scaleLinear()
     .domain([top_n, 0])
     .range([height-margin.bottom, margin.top]);
-  
+
   let groups = dataset.map(d =&gt; d.group);
   groups = [...new Set(groups)];
-  
+
   let colourScale = d3.scaleOrdinal()
     .range([&quot;#adb0ff&quot;, &quot;#ffb3ff&quot;, &quot;#90d595&quot;, &quot;#e48381&quot;, &quot;#aafbff&quot;, &quot;#f7bb5f&quot;, &quot;#eafb50&quot;])
     .domain([&quot;India&quot;,&quot;Europe&quot;,&quot;Asia&quot;,&quot;Latin America&quot;,&quot;Middle East&quot;,&quot;North America&quot;,&quot;Africa&quot;]);
     // .domain(groups);
-  
+
   let xAxis = d3.axisTop()
     .scale(x)
     .ticks(width &gt; 500 ? 5:2)
     .tickSize(-(height-margin.top-margin.bottom))
     .tickFormat(d =&gt; d3.format(&#x27;,&#x27;)(d));
-  
+
   svg.append(&#x27;g&#x27;)
     .attrs({
       class: &#x27;axis xAxis&#x27;,
@@ -160,7 +160,7 @@ path.domain{
     .call(xAxis)
       .selectAll(&#x27;.tick line&#x27;)
       .classed(&#x27;origin&#x27;, d =&gt; d == 0);
-  
+
   svg.selectAll(&#x27;rect.bar&#x27;)
     .data(yearSlice, d =&gt; d.name)
     .enter()
@@ -176,7 +176,7 @@ path.domain{
       fill: d =&gt; colourScale(d.group)
       // fill: d =&gt; d.colour
     });
-  
+
   svg.selectAll(&#x27;text.label&#x27;)
     .data(yearSlice, d =&gt; d.name)
     .enter()
@@ -201,7 +201,7 @@ path.domain{
       &#x27;font-size&#x27;: d =&gt; d.weight == 400 ? &#x27;12px&#x27;:&#x27;&#x27;
     })
     .html(d =&gt; d.text);
-  
+
   svg.selectAll(&#x27;text.valueLabel&#x27;)
     .data(yearSlice, d =&gt; d.name)
     .enter()
@@ -212,7 +212,7 @@ path.domain{
       y: d =&gt; y(d.rank)+5+((y(1)-y(0))/2)+1,
     })
     .text(d =&gt; d3.format(&#x27;,&#x27;)(d.lastValue));
-  
+
   let credit = svg.append(&#x27;text&#x27;)
     .attrs({
       class: &#x27;caption&#x27;,
@@ -224,7 +224,7 @@ path.domain{
     })
     .html(&#x27;Graphic: @jburnmurdoch&#x27;)
     .call(halo, 10);
-  
+
   let sources = svg.append(&#x27;text&#x27;)
     .attrs({
       class: &#x27;caption&#x27;,
@@ -236,7 +236,7 @@ path.domain{
     })
     .html(&#x27;Sources: Reba, M. L., F. Reitsma, and K. C. Seto. 2018; Demographia&#x27;)
     .call(halo, 10);
-  
+
   let yearIntro = svg.append(&#x27;text&#x27;)
     .attrs({
       class: &#x27;yearIntro&#x27;,
@@ -247,9 +247,9 @@ path.domain{
       &#x27;text-anchor&#x27;: &#x27;end&#x27;
     })
     .html(&#x27;Year: &#x27;);
-  
+
   haloHighlight(yearIntro, 3000, 3, 1, &#x27;#cccccc&#x27;);
-  
+
   let yearText = svg.append(&#x27;text&#x27;)
     .attrs({
       class: &#x27;yearText&#x27;,
@@ -260,23 +260,23 @@ path.domain{
     //   &#x27;text-anchor&#x27;: &#x27;end&#x27;
     // })
     .html(~~year);
-  
+
   yearText.call(halo, 10);
-  
+
   haloHighlight(yearText, 3000, 8, 1, &#x27;#cccccc&#x27;);
-  
+
   let regions = world_simplified.objects.ne_10m_admin_0_countries.geometries.map(d =&gt; d.properties.REGION_WB);
   regions = [...new Set(regions)];
-  
+
   const path = d3.geoPath()
     .projection(projection);
- 
+
   let mapLegend = svg.append(&#x27;g&#x27;)
     .attrs({
       class: &#x27;map-legend&#x27;,
       transform: &#x60;translate(${width-225}, ${height-160})&#x60;
     });
-  
+
   mapLegend
     .append(&#x27;rect&#x27;)
     .attrs({
@@ -289,7 +289,7 @@ path.domain{
       fill: &#x27;#ffffff&#x27;,
       stroke: &#x27;#dddddd&#x27;
     });
-  
+
   let mapSubtitle = mapLegend
     .append(&#x27;text&#x27;)
     .attrs({
@@ -299,9 +299,9 @@ path.domain{
     .html(&#x27;Bar colours represent regions&#x27;);
 
   mapSubtitle.call(halo, 5);
-  
+
   haloHighlight(mapSubtitle, 4500, 1, 1, &#x27;#777777&#x27;);
-  
+
   mapLegend
     .append(&#x27;path&#x27;)
     .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;South Asia&#x27;)))
@@ -309,7 +309,7 @@ path.domain{
       d: path,
       fill: colourScale(&#x27;India&#x27;)
     });
-  
+
   mapLegend
     .append(&#x27;path&#x27;)
     .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;East Asia &amp; Pacific&#x27;)))
@@ -317,7 +317,7 @@ path.domain{
       d: path,
       fill: colourScale(&#x27;Asia&#x27;)
     });
-  
+
   mapLegend
     .append(&#x27;path&#x27;)
     .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;Europe &amp; Central Asia&#x27; &amp;&amp; d.properties.ADMIN != &#x27;Greenland&#x27;)))
@@ -325,7 +325,7 @@ path.domain{
       d: path,
       fill: colourScale(&#x27;Europe&#x27;)
     });
-  
+
   mapLegend
     .append(&#x27;path&#x27;)
     .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;North America&#x27;)))
@@ -333,7 +333,7 @@ path.domain{
       d: path,
       fill: colourScale(&#x27;North America&#x27;)
     });
-  
+
   mapLegend
     .append(&#x27;path&#x27;)
     .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;Middle East &amp; North Africa&#x27;)))
@@ -341,7 +341,7 @@ path.domain{
       d: path,
       fill: colourScale(&#x27;Middle East&#x27;)
     });
-  
+
   mapLegend
     .append(&#x27;path&#x27;)
     .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;Sub-Saharan Africa&#x27;)))
@@ -349,7 +349,7 @@ path.domain{
       d: path,
       fill: colourScale(&#x27;Africa&#x27;)
     });
-  
+
   mapLegend
     .append(&#x27;path&#x27;)
     .datum(topojson.merge(world_simplified, world_simplified.objects.ne_10m_admin_0_countries.geometries.filter(d =&gt; d.properties.REGION_WB == &#x27;Latin America &amp; Caribbean&#x27;)))
@@ -357,7 +357,7 @@ path.domain{
       d: path,
       fill: colourScale(&#x27;Latin America&#x27;)
     });
-  
+
   mapLegend
     .selectAll(&#x27;circle&#x27;)
     .data(yearSlice, d =&gt; d.name)
@@ -374,9 +374,9 @@ path.domain{
       fill: &#x27;#000000&#x27;,
       &#x27;fill-opacity&#x27;: 0.3
     });
-  
+
   d3.timeout(_ =&gt; {
-    
+
     svg.selectAll(&#x27;.yearIntro&#x27;)
       .transition()
       .duration(1000)
@@ -384,7 +384,7 @@ path.domain{
       .styles({
         opacity: 0
       });
-  
+
     let ticker = d3.interval(e =&gt; {
 
       yearSlice = dataset.filter(d =&gt; d.year == year &amp;&amp; !isNaN(d.value))
@@ -454,7 +454,7 @@ path.domain{
           transform: d =&gt; &#x60;translate(${x(d.value)-5}, ${y(top_n+1)+5+((y(1)-y(0))/2)-8})&#x60;,
           &#x27;text-anchor&#x27;: &#x27;end&#x27;
         })
-        .html(&#x27;&#x27;)    
+        .html(&#x27;&#x27;)
         .transition()
           .duration(tickDuration)
           .ease(d3.easeLinear)
@@ -614,11 +614,12 @@ path.domain{
       if(year == endYear) ticker.stop();
       year = year + 1;
     },tickDuration);
-  
+
   }, 6000);
 
   return svg.node();
 }</pre>
+<a href="/">Static Bar Chart</a></div>
 <pre>height = 600</pre>
 <pre>dataset = d3.csv(&#x27;https://gist.githubusercontent.com/johnburnmurdoch/4199dbe55095c3e13de8d5b2e5e5307a/raw/fa018b25c24b7b5f47fd0568937ff6c04e384786/city_populations&#x27;)</pre>
 <pre>haloHighlight = function(text, delay, strokeWidth=1, opacity=1, color=&#x27;#000000&#x27;) {
@@ -668,9 +669,9 @@ halo = function(text, strokeWidth, color=&#x27;#ffffff&#x27;) {
   let word_simplified = topojson.presimplify(world);
   let min_weight = topojson.quantile(word_simplified, 0.3);
   word_simplified = topojson.simplify(word_simplified, min_weight);
-  
-  let land = word_simplified;  
-  
+
+  let land = word_simplified;
+
   return land
 }</pre>
 <pre>topojson = require(&#x27;topojson-client@3&#x27;, &#x27;topojson-simplify@3&#x27;)</pre>

@@ -14,12 +14,12 @@ var chart = function(dataset) {
     bottom: 10,
     left: 30
   };
-  
+
   let title = svg.append('text')
     .attr('class', 'title')
 	.attr('y', '24')
     .text('Lottery Numbers');
-  
+
   var xScale = d3.scaleLinear()
                  .domain([0, 200])
                  .range([margin.left, width - margin.right]);
@@ -44,16 +44,16 @@ var chart = function(dataset) {
   }
 
  // this is broken
-  // var x = d3.scaleLinear().domain([0, d3.max(d3.values(counts))]).range([0,width]);
-  // var y = d3.scaleLinear().domain([0, d3.max(d3.keys(counts))]).range([0,50]);
-  // svg.selectAll("g")
-     // .data(d3.values(counts))
-     // .enter()
-     // .append("rect")
-         // .attr("x", margin.left)
-         // .attr("y", y)
-         // .attr("width", x)
-         // .attr("height", 5);
+  var x = d3.scaleLinear().domain([0, d3.max(d3.values(counts))]).range([0,width]);
+  var y = d3.scaleLinear().domain([0, d3.max(d3.keys(counts))]).range([0,50]);
+  svg.selectAll("g")
+     .data(d3.values(counts))
+     .enter()
+     .append("rect")
+         .attr("x", margin.left)
+         .attr("y", y)
+         .attr("width", x)
+         .attr("height", 5);
 }
 
 
