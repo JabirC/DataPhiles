@@ -51,3 +51,11 @@ brianL -- 2019-04-02 22:45
 --------------------------------------------------------------
 Bar graph with lottery data started
 ==============================================================
+
+damianW -- 2019-04-02 23:14
+--------------------------------------------------------------
+Worked on creating multi-line graph
+Worked on function to determine evenness of Numbers
+Worked on graphs
+Added temp radio transition bar chart
+==============================================================
