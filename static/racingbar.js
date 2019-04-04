@@ -17,6 +17,19 @@ var uni_data = [];
 var month = 5;
 var year = 2002;
 
+var y_num = function(d) { return d["number"] * 8;}
+var x_num = function(d) { return d["frequency"] * 2;}
+
+var xValue = function(d) { return d["frequency"];},
+    xScale = d3.scaleLinear().range([0, width]),
+    xMap = function(d) { return xScale(xValue(d));}, // value -> display
+    xAxis = d3.axisBottom(xScale);
+
+
+var yValue = function(d) { return d["number"];},
+  yScale = d3.scaleLinear().range([height, 0]), // value -> display
+  yMap = function(d) { return yScale(yValue(d));}, // value -> display
+  yAxis = d3.axisLeft(yScale);
 
 var chart = function(dataset) {
   console.log("xxxxx");
@@ -68,50 +81,36 @@ var svg = d3.select("body").append("svg")
 
     do_lottery_number();
 
-    animation();
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 ////////////////////////////////////////////////////////////////
 
 
-var model = ["acura integra","acura legend","audi 90","audi 100","bmw 535i","buick century","buick lesabre","buick roadmaster","buick riviera","cadillac deville"];
-var power = [140,200,172,172,208,110,170,180,170,200];
-var mpgc = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0];
-
-var data = [{"model":model[0],"power":power[0],"mpgc":mpgc[0]},
-      {"model":model[1],"power":power[1],"mpgc":mpgc[1]},
-      {"model":model[2],"power":power[2],"mpgc":mpgc[2]},
-      {"model":model[3],"power":power[3],"mpgc":mpgc[3]},
-      {"model":model[4],"power":power[4],"mpgc":mpgc[4]},
-      {"model":model[5],"power":power[5],"mpgc":mpgc[5]},
-      {"model":model[6],"power":power[6],"mpgc":mpgc[6]},
-      {"model":model[7],"power":power[7],"mpgc":mpgc[7]},
-      {"model":model[8],"power":power[8],"mpgc":mpgc[8]},
-      {"model":model[9],"power":power[9],"mpgc":mpgc[9]},
-      ]
-
-var dates = ["2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019"];
-var nums
-
-
-console.log(data);
 
 
 
 
-var xValue = function(d) { return d["frequency"];},
-  xScale = d3.scaleLinear().range([0, width]),
-  xMap = function(d) { return xScale(xValue(d));}, // value -> display
-    xAxis = d3.axisBottom(xScale);
+
+
 
 // setup y
-/*
-var yValue = function(d) { return d["mpgc"];},
-  yScale = d3.scaleLinear().range([height, 0]), // value -> display
-  yMap = function(d) { return yScale(yValue(d));}, // value -> display
-    yAxis = d3.axisLeft(yScale);
-*/
+
+
+
+
 
 
 
@@ -124,7 +123,7 @@ var yValue = function(d) { return d["mpgc"];},
   //https://stackoverflow.com/questions/1669190/find-the-min-max-element-of-an-array-in-javascript
   var p_min = Math.min.apply(null, uni_freq_array()),
       p_max = Math.max.apply(null, uni_freq_array());
-
+/*
   var m_min = Math.min.apply(null, mpgc),
       m_max = Math.max.apply(null, mpgc);
 
@@ -163,44 +162,36 @@ var yValue = function(d) { return d["mpgc"];},
       .style("text-anchor", "end")
 */
 
-var tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
-
   // draw dots
-  /*
+  
+  
+  
   svg.selectAll(".bar")
-      .data(data)
+      .data(uni_data)
     .enter()
         .append("rect")
            // .attr("class", "dot")
-            .attr("width", xMap)
-            .attr("height",30)
+            .attr("width", x_num)
+            .attr("height",5)
             .attr("x", 0)//function(d) { return d["power"];})
-            .attr("y", yMap)
+            .attr("y", (y_num))
             .style("fill", function(d) { return "red";})
-            .on("mouseover", function(d) {
-                  tooltip.transition()
-                       .duration(200)
-                       .style("opacity", .9);
-                  tooltip.html(d["model"] + "<br/> (" + xValue(d)
-                  + ", " + yValue(d) + ")")
-                       .style("left", (d3.event.pageX + 5) + "px")
-                       .style("top", (d3.event.pageY - 28) + "px");
-              })
-              .on("mouseout", function(d) {
-                  tooltip.transition()
-                       .duration(500)
-                       .style("opacity", 0);
-              })
-           .on("click",function(d){
-            console.log(d["model"]);
-           });
+        .append("text")
+        	.text(y_num)
+    	    .attr("x", 50)
+      		.attr("y", y_num)
+      		.attr("fill","black")
+      
 
- */
+ //console.log("kaljsdalkjshfdaskjdhasl");
 
 
 /////////////////////////////////////////////////////////////////////
+
+
+
+
+    animation();
 
 }
 
@@ -253,10 +244,21 @@ var animation = function(){
 
           month++;
 
-var xValue = function(d) { return d["frequency"];},
-  xScale = d3.scaleLinear().range([0, width]),
-  xMap = function(d) { return xScale(xValue(d));}, // value -> display
-    xAxis = d3.axisBottom(xScale);
+		svg.selectAll("rect")
+      		.data(uni_data)
+           // .attr("class", "dot")
+            .attr("width", x_num)
+            .attr("height",5)
+            .attr("x", 0)//function(d) { return d["power"];})
+            .attr("y", (y_num))
+            .style("fill", function(d) { return "red";})
+        /*.append("text")
+        	.text(y_num)
+    	    .attr("x", 50)
+      		.attr("y", y_num)
+      		.attr("fill","black")
+		*/
+
 
   var p_min = Math.min.apply(null, uni_freq_array()),
       p_max = Math.max.apply(null, uni_freq_array());
