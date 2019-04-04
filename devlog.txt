@@ -59,3 +59,9 @@ Worked on function to determine evenness of Numbers
 Worked on graphs
 Added temp radio transition bar chart
 ==============================================================
+
+damianW -- 2019-04-04 19:57
+--------------------------------------------------------------
+Debating with group whether to switch to earthquake data set,
+which could prove to be more substantial
+==============================================================
