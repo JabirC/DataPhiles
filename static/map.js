@@ -12,8 +12,12 @@ var chart = function(data) {
 
     // Function for mapping the magnitude of an earthquake to radius of the dot
     var r = d3.scaleLinear()
-              .domain([0, 12])
+              .domain([2, 10])
               .range([0, 10]);
+
+    var c = d3.scaleLinear()
+              .domain([2, 10])
+              .range(["#00FF00", "#FF0000"]);
 
     var worldmap = d3.json("static/geodata.json").then(function (geojson) { 
 
@@ -46,10 +50,13 @@ var chart = function(data) {
                     let point = [d["LONGITUDE"], d["LATITUDE"]];
                     return projection(point)[1];
                 })
-                .style("fill", "rgb(250, 50, 50)")
                 .style("stroke", "#555555")
                 .transition()
                 .duration(2000)
+                    // EQ_PRIMARY denotes the magnitude of the earthquake
+                    .style("fill", function(d) {
+                        return c(d["EQ_PRIMARY"]);
+                    })
                     .attr("r", function(d) {
                         return r(d["EQ_PRIMARY"]);
                     });
