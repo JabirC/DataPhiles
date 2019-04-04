@@ -10,4 +10,6 @@ def parse_tsv(filename):
         reader = csv.DictReader(tsv, dialect='excel-tab')
         for row in reader:
             res.append(row)
-    return res
+    # DictReader returns OrderedDicts, but we don't need that,
+    # so convert each OrderedDict to a regular dictionary
+    return list(map(dict, res))
