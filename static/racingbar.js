@@ -4,8 +4,8 @@
 
 
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 600 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+    width = 1000 - margin.left - margin.right,
+    height = 1000 - margin.top - margin.bottom;
 
 
 var data_global;
@@ -17,7 +17,10 @@ var uni_data = [];
 var month = 5;
 var year = 2002;
 
-var y_num = function(d) { return d["number"] * 8;}
+var y_num = function(d) { return d["number"] * 12;}
+var y_num_4bar = function(d) { return d["number"] * 12 - 5;}
+var y_num_4txt = function(d) { return d["number"];}
+
 var x_num = function(d) { return d["frequency"] * 2;}
 
 var xValue = function(d) { return d["frequency"];},
@@ -31,6 +34,9 @@ var yValue = function(d) { return d["number"];},
   yMap = function(d) { return yScale(yValue(d));}, // value -> display
   yAxis = d3.axisLeft(yScale);
 
+
+////////////////////////func call start//////////////////////////////////////////////
+
 var chart = function(dataset) {
   console.log("xxxxx");
   var i;
@@ -41,18 +47,11 @@ var chart = function(dataset) {
       frequency: 0
     });
   }
-
- // const svg = d3.select('svg');
-  //console.log(svg);
   data_global = dataset;
 
 for (var i = 0; i < 75; i++){
   items[i] = 0;
 }
-
-
-
-
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -61,19 +60,17 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  //get_month(dataset[0][0]);
-
   let month_1 = svg.append("text")
       .text("month: " + month)
       .attr('class','title')
-      .attr('y', '500')
+      .attr('y', '0')
       .attr('x', '150')
       .attr('id','month')
       
   let year_1 = svg.append("text")
     .text("year: " + year)
     .attr('class','title')
-    .attr('y', '500')
+    .attr('y', '0')
     .attr('x', '50')
     .attr('id','year')
 
@@ -82,59 +79,15 @@ var svg = d3.select("body").append("svg")
     do_lottery_number();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-// setup y
-
-
-
-
-
-
-
-// add the graph canvas to the body of the webpage
-
-
-
-  // don't want dots overlapping axis, so add in buffer to data domain
 
   //https://stackoverflow.com/questions/1669190/find-the-min-max-element-of-an-array-in-javascript
   var p_min = Math.min.apply(null, uni_freq_array()),
       p_max = Math.max.apply(null, uni_freq_array());
-/*
-  var m_min = Math.min.apply(null, mpgc),
-      m_max = Math.max.apply(null, mpgc);
-
-  xScale.domain([p_min,p_max]);
-  //yScale.domain([0,6]);
-
-
-  // x-axis
-  svg.append("g")
+  
+    svg.append("g")
       .attr("class", "x_axis")
-      .attr("transform", "translate(0," + height + ")")
+      .attr("transform", "translate(15," + height + ")")
       .call(xAxis)
     .append("text")
     .text("Number of Appearance")
@@ -144,53 +97,31 @@ var svg = d3.select("body").append("svg")
       .attr("y", -6)
       .attr("fill","black")
       .style("text-anchor", "end")
-
-
-  // y-axis
-  /*
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-    .text("Lottery Number")
-      .attr("class", "label")
-      //.attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("x",100)
-      .attr("dy", ".71em")
-    .attr("fill","black")
-      .style("text-anchor", "end")
-*/
-
-  // draw dots
   
   
-  
-  svg.selectAll(".bar")
+ var helper = svg.selectAll(".bar")
       .data(uni_data)
     .enter()
-        .append("rect")
+       .append("g");
+       
+        helper.append("rect")
            // .attr("class", "dot")
             .attr("width", x_num)
-            .attr("height",5)
-            .attr("x", 0)//function(d) { return d["power"];})
-            .attr("y", (y_num))
-            .style("fill", function(d) { return "red";})
-        .append("text")
-        	.text(y_num)
-    	    .attr("x", 50)
+            .attr("height",10)
+            .attr("x", 15)//function(d) { return d["power"];})
+            .attr("y", (y_num_4bar))
+            .style("fill", function(d) { return "blue";})
+            .text(y_num)
+        
+        helper.append("text")
+        	.text(y_num_4txt)
+        	.attr("class","title")
+    	    .attr("x", 0)
       		.attr("y", y_num)
       		.attr("fill","black")
-      
-
- //console.log("kaljsdalkjshfdaskjdhasl");
-
-
-/////////////////////////////////////////////////////////////////////
-
-
-
-
+      		.attr("dy", ".35em")
+      		.style("font-size","10")
+      		.style("font-family","Arial");
     animation();
 
 }
@@ -248,16 +179,9 @@ var animation = function(){
       		.data(uni_data)
            // .attr("class", "dot")
             .attr("width", x_num)
-            .attr("height",5)
-            .attr("x", 0)//function(d) { return d["power"];})
-            .attr("y", (y_num))
-            .style("fill", function(d) { return "red";})
-        /*.append("text")
-        	.text(y_num)
-    	    .attr("x", 50)
-      		.attr("y", y_num)
-      		.attr("fill","black")
-		*/
+            //.attr("x", 0)//function(d) { return d["power"];})
+            .attr("y", (y_num_4bar))
+            .style("fill", function(d) { return "blue";})
 
 
   var p_min = Math.min.apply(null, uni_freq_array()),
