@@ -1,12 +1,13 @@
 import json
+import csv
 
-def load_data():
-    with open("data/lottery.json") as f:
-        d = json.load(f)['data']
-    L = []
-    for row in d:
-        data = row[8]
-        data = data[:data.find('T')]
-        numbers = row[9] + " " + row[10]
-        L.append((data, numbers.split()))
-    return L
+def parse_tsv(filename):
+    '''
+    Given a tsv file, returns a list of dictionaries
+    '''
+    res = []
+    with open(filename) as tsv:
+        reader = csv.DictReader(tsv, dialect='excel-tab')
+        for row in reader:
+            res.append(row)
+    return res

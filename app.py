@@ -7,7 +7,7 @@ dataset = lottery
 from flask import *
 import os
 import json
-import pprint
+from pprint import pprint
 
 from util import data
 
@@ -20,15 +20,12 @@ def home():
 
 @app.route('/test', methods = ['GET', 'POST'])
 def test():
-	lottery_data = data.load_data()
-	pprint.pprint(lottery_data)
-	return render_template("test.html", data = json.dumps(lottery_data))
+        d = data.parse_tsv('data/signif.tsv')
+        return "a"
 
-@app.route('/test2', methods = ['GET'])
-def test2():
-	lottery_data = data.load_data()
-	pprint.pprint(lottery_data)
-	return render_template("test2.html",data=json.dumps(lottery_data))
+# @app.route('/test2', methods = ['GET'])
+# def test2():
+        # return render_template("test2.html",data=json.dumps(lottery_data))
 
 @app.route('/test3', methods=['GET','POST'])
 def test3():
