@@ -2,35 +2,43 @@
 
 //dont edit this file, let me handle it 
 
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 600 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+
+
 var data_global;
 
 var items = [];
 
-var uni_data = Array(70);
+var uni_data = [];
+
+var month = 5;
+var year = 2002;
 
 
 var chart = function(dataset) {
-
-
-
-
-
-  var startYear = 2002;
-  var height = 600;
+  console.log("xxxxx");
+  var i;
+  
+  for(i = 0; i<75;i++){
+    uni_data.push({
+      number: 0,
+      frequency: 0
+    });
+  }
 
  // const svg = d3.select('svg');
   //console.log(svg);
   data_global = dataset;
 
-for (var i = 0; i < 70; i++){
+for (var i = 0; i < 75; i++){
   items[i] = 0;
 }
 
-console.log(items);
 
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 600 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+
 
 
 var svg = d3.select("body").append("svg")
@@ -40,27 +48,26 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  let year = startYear;
-  var month_counter = 1;
-  var month_txt = 5;
-  var year_txt = 2002;
   //get_month(dataset[0][0]);
 
   let month_1 = svg.append("text")
-      .text("month: " + month_txt)
+      .text("month: " + month)
       .attr('class','title')
       .attr('y', '500')
       .attr('x', '150')
       .attr('id','month')
       
   let year_1 = svg.append("text")
-    .text("year: " + year_txt)
+    .text("year: " + year)
     .attr('class','title')
     .attr('y', '500')
     .attr('x', '50')
     .attr('id','year')
 
     then = Date.now();
+
+    do_lottery_number();
+
     animation();
 
 
@@ -88,12 +95,12 @@ var dates = ["2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 
 var nums
 
 
+console.log(data);
 
 
 
 
-
-var xValue = function(d) { return d["power"];},
+var xValue = function(d) { return d["frequency"];},
   xScale = d3.scaleLinear().range([0, width]),
   xMap = function(d) { return xScale(xValue(d));}, // value -> display
     xAxis = d3.axisBottom(xScale);
@@ -115,19 +122,19 @@ var yValue = function(d) { return d["mpgc"];},
   // don't want dots overlapping axis, so add in buffer to data domain
 
   //https://stackoverflow.com/questions/1669190/find-the-min-max-element-of-an-array-in-javascript
-  var p_min = Math.min.apply(null, power),
-      p_max = Math.max.apply(null, power);
+  var p_min = Math.min.apply(null, uni_freq_array()),
+      p_max = Math.max.apply(null, uni_freq_array());
 
   var m_min = Math.min.apply(null, mpgc),
       m_max = Math.max.apply(null, mpgc);
 
-  xScale.domain([0,10]);
+  xScale.domain([p_min,p_max]);
   //yScale.domain([0,6]);
 
 
   // x-axis
   svg.append("g")
-      .attr("class", "x axis")
+      .attr("class", "x_axis")
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis)
     .append("text")
@@ -198,11 +205,25 @@ var tooltip = d3.select("body").append("div")
 }
 
 var id;
-var month = 5;
-var year = 2002;
 
 var fps, fpsInterval, startTime, now, then, elapsed;
 fpsInterval = 700;
+
+var uni_freq_array = function(){
+  var ok = [];
+  for(var i = 0; i < uni_data.length; i++){
+    ok[i] = uni_data[i].frequency;
+  }
+  return ok;
+}
+
+var uni_num_array = function(){
+  var ok = [];
+  for(var i = 0; i < uni_data.length; i++){
+    ok[i] = uni_data[i].number;
+  }
+  return ok;
+}
 
 var animation = function(){
   cancelAnimationFrame(id);
@@ -210,7 +231,7 @@ var animation = function(){
   now = Date.now();
   elapsed = now - then;
   if (elapsed > fpsInterval) {
-
+////////////////////////////////////////////////////////////////////////////////////////
     //code to iterate
 
           const svg = d3.select('svg');
@@ -219,7 +240,7 @@ var animation = function(){
               year++;
             svg.selectAll('#year')
              .text("year: " + year)
-          }else if(year >= 2019 && month > 6){
+          }else if(year >= 2019 && month > 3){
             cancelAnimationFrame(id);
             exit();
           }
@@ -227,11 +248,31 @@ var animation = function(){
           svg.selectAll('#month')
              .text("month: " + month)
 
-          do_lottery_number(data_global,year,month);
+          do_lottery_number();
           top_6();
 
           month++;
 
+var xValue = function(d) { return d["frequency"];},
+  xScale = d3.scaleLinear().range([0, width]),
+  xMap = function(d) { return xScale(xValue(d));}, // value -> display
+    xAxis = d3.axisBottom(xScale);
+
+  var p_min = Math.min.apply(null, uni_freq_array()),
+      p_max = Math.max.apply(null, uni_freq_array());
+
+  xScale.domain([p_min,p_max]);
+
+  svg.selectAll(".x_axis")
+      .call(xAxis)
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
       then = now - (elapsed % fpsInterval);
   }
 
@@ -357,26 +398,36 @@ var top_6 = function(){
   holder_d[4] = big_5;
   holder_d[5] = big_6;
   
+
+
   console.log("Current Top 6 number is: " + holder[0].toString() + " " + 
     holder[1].toString() + " " + holder[2].toString() + " " + holder[3].toString() +
     " " + holder[4].toString() + " " + holder[5].toString());
 }
 
-var do_lottery_number = function(dataset,year,month){
+
+var do_lottery_number = function(something){
   var i = 0;
   var j = 0;
 
-  while(i < dataset.length){
+  for(i;i < data_global.length;i++){
 
-    if(get_year(dataset[i][0]) == year){
-        if(get_month(dataset[i][0]) == month){
+
+    if(get_year(data_global[i][0]) == year){
+        if(get_month(data_global[i][0]) == month){
           //console.log(dataset[i][1]);
-          increment_arr(dataset[i][1],items);
+          increment_arr(data_global[i][1],items);
+
         }
     }
     i++;
-
   }
+
+  for(j; j < items.length; j++){
+    uni_data[j].number = j + 1;
+    uni_data[j].frequency = items[j];
+  }
+
   //console.log(items);
   //console.log(year);
   /*
