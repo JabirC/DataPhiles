@@ -7,6 +7,10 @@ var chart = function(data) {
                 .append("svg")
                 .attr("height", height + margin.top + margin.bottom)
                 .attr("width", width + margin.left + margin.right)
+                // this allows the svg to be zoomed and dragged with black magic
+                .call(d3.zoom().on("zoom", function () {
+                    svg.attr("transform", d3.event.transform)
+                }))
                 .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
