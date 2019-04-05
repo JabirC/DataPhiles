@@ -1,4 +1,7 @@
 var chart = function(data) {
+    var earthquake_data_path = "/earthquakesdata";
+    var worldmap_data_path = "/worldmapdata";
+
     var margin = {top : 0, left: 0, right: 0, bottom: 0},
         height = 600 - margin.top - margin.bottom,
         width = 1200 - margin.left - margin.right;
@@ -23,7 +26,35 @@ var chart = function(data) {
               .domain([2, 10])
               .range(["#00FF00", "#FF0000"]);
 
-    var worldmap = d3.json("static/geodata.json").then(function (geojson) { 
+    // Takes in a projection to use and plots each earthquake on the map
+    var plotQuakes = function (projection) {
+        d3.tsv(earthquake_data_path).then(function (data) {
+            svg.selectAll("circle")
+                .data(data)
+                .enter()
+                .append("circle")
+                    .attr("cx", function(d) {
+                        let point = [d["LONGITUDE"], d["LATITUDE"]];
+                        return projection(point)[0];
+                    })
+                    .attr("cy", function(d) {
+                        let point = [d["LONGITUDE"], d["LATITUDE"]];
+                        return projection(point)[1];
+                    })
+                    .style("stroke", "#555555")
+                    .transition()
+                    .duration(2000)
+                        // EQ_PRIMARY denotes the magnitude of the earthquake
+                        .style("fill", function(d) {
+                            return c(d["EQ_PRIMARY"]);
+                        })
+                        .attr("r", function(d) {
+                            return r(d["EQ_PRIMARY"]);
+                        });
+        });
+    };
+
+    var drawWorldmap = d3.json(worldmap_data_path).then(function (geojson) { 
 
         // Function for projecting longitude/latitude into a flat map
         let projection = d3.geoEquirectangular()
@@ -40,29 +71,6 @@ var chart = function(data) {
                 .attr("d", path)
                 .style("fill", "#cccccc")
                 .style("stroke", "#888888");
-
-        // Plot earthquakes
-        svg.selectAll("circle")
-            .data(data)
-            .enter()
-            .append("circle")
-                .attr("cx", function(d) {
-                    let point = [d["LONGITUDE"], d["LATITUDE"]];
-                    return projection(point)[0];
-                })
-                .attr("cy", function(d) {
-                    let point = [d["LONGITUDE"], d["LATITUDE"]];
-                    return projection(point)[1];
-                })
-                .style("stroke", "#555555")
-                .transition()
-                .duration(2000)
-                    // EQ_PRIMARY denotes the magnitude of the earthquake
-                    .style("fill", function(d) {
-                        return c(d["EQ_PRIMARY"]);
-                    })
-                    .attr("r", function(d) {
-                        return r(d["EQ_PRIMARY"]);
-                    });
+        plotQuakes(projection);
     });
 };

@@ -5,8 +5,6 @@ import os
 import json
 from pprint import pprint
 
-from util import data
-
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
 
@@ -16,8 +14,7 @@ def home():
 
 @app.route('/test', methods = ['GET'])
 def test():
-        d = data.parse_tsv('data/signif.tsv')
-        return render_template("map.html", data=d)
+        return render_template("map.html")
 
 @app.route('/test2', methods = ['GET'])
 def test2():
@@ -26,6 +23,16 @@ def test2():
 @app.route('/test3', methods=['GET'])
 def test3():
 	return render_template("test3.html")
+
+# Below are URLs to send data files to the JS code
+
+@app.route('/worldmapdata')
+def world_map():
+        return send_file("data/geodata.json")
+
+@app.route('/earthquakesdata')
+def earthquake_map():
+        return send_file("data/earthquakes.tsv")
 
 if __name__ == "__main__":
 	app.debug = True
