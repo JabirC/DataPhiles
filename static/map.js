@@ -12,11 +12,11 @@ var chart = function(data) {
                 .attr("height", height + margin.top + margin.bottom)
                 .attr("width", width + margin.left + margin.right)
                 // this allows the svg to be zoomed and dragged with black magic
-                .call(d3.zoom().on("zoom", function () {
-                    svg.attr("transform", d3.event.transform)
+                // .call(d3.zoom().on("zoom", function () {
+                //     svg.attr("transform", d3.event.transform)
                 }))
                 .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    .attr("translate(" + margin.left + "," + margin.top + ")");
 
     // Function for mapping the magnitude of an earthquake to radius of the dot
     var r = d3.scaleLinear()
