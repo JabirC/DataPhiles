@@ -1,5 +1,5 @@
-var startYear = 1750;
-var minMag = 0;
+var startYear, endYear;
+var minMag, maxMag;
 
 var chart = function(data) {
     var earthquake_data_path = "/earthquakesdata";
@@ -33,13 +33,19 @@ var chart = function(data) {
     var updatePlot = function () {
         let dots = svg.selectAll("circle")
         dots.filter(function (d) {
-                return d["YEAR"] < startYear || d["EQ_PRIMARY"] < minMag;
+                return endYear < d["YEAR"] ||
+                       startYear > d["YEAR"] ||
+                       maxMag < d["EQ_PRIMARY"] ||
+                       minMag > d["EQ_PRIMARY"];
             })
             .transition()
             .duration(1000)
                 .attr("r", 0);
         dots.filter(function (d) {
-                return d["YEAR"] >= startYear && d["EQ_PRIMARY"] >= minMag;
+                return endYear >= d["YEAR"] &&
+                       startYear <= d["YEAR"] &&
+                       maxMag >= d["EQ_PRIMARY"] &&
+                       minMag <= d["EQ_PRIMARY"];
             })
             .transition()
             .duration(1000)
@@ -78,26 +84,29 @@ var chart = function(data) {
     };
 
     // Time
-    var sliderTime = d3
-        .sliderBottom()
-        .min(1600).max(2019)
+    var sliderTime = d3.sliderBottom()
+        .domain([1600, 2019])
         .width(400)
         .tickFormat(d3.format("d"))
-        .default(startYear)
+        .default([1600, 2019])
+        .fill("#2196f3")
         .on('onchange', val => {
-            startYear = val;
+            console.log(val);
+            startYear = val[0];
+            endYear = val[1];
             updatePlot();
         });
 
-    var sliderMag = d3.
-        sliderBottom()
-        .min(0).max(10)
+    var sliderMag = d3.sliderBottom()
+        .domain([0, 10])
         .step(0.1)
         .width(400)
         .tickFormat(d3.format('.2s'))
-        .default(minMag)
+        .fill("#2196f3")
+        .default([0, 10])
         .on('onchange', val => {
-            minMag = val;
+            minMag = val[0];
+            maxMag = val[1];
             updatePlot();
         });
 
@@ -112,11 +121,12 @@ var chart = function(data) {
     gTime.call(sliderTime);
     gTime.append('text')
          .attr("y", -10)
-         .text("View earthquakes that occured after...")
+         .text("Filter by year")
+         .style('font-family', 'sans-serif');
     gMag.call(sliderMag);
     gMag.append('text')
          .attr("y", -10)
-         .text("View earthquakes with magnitude grater than...")
+         .text("Filter by magnitude")
          .style('font-family', 'sans-serif');
 
     var drawWorldmap = d3.json(worldmap_data_path).then(function (geojson) {
