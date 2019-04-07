@@ -22,7 +22,7 @@ def test2():
 
 @app.route('/test3', methods=['GET'])
 def test3():
-	return render_template("test3.html")
+	return render_template("slider.html")
 
 # Below are URLs to send data files to the JS code
 
