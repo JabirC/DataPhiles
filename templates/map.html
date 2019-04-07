@@ -51,6 +51,7 @@
 				                .data(data)
 				                .enter()
 				                .append("circle")
+												.filter(function(d) { return d["YEAR"] == 2011})
 				                    .attr("cx", function(d) {
 				                        let point = [d["LONGITUDE"], d["LATITUDE"]];
 				                        return projection(point)[0];
