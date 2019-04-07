@@ -12,11 +12,11 @@ var chart = function(data) {
                 .attr("height", height + margin.top + margin.bottom)
                 .attr("width", width + margin.left + margin.right)
                 // this allows the svg to be zoomed and dragged with black magic
-                // .call(d3.zoom().on("zoom", function () {
-                //     svg.attr("transform", d3.event.transform)
+                .call(d3.zoom().on("zoom", function () {
+                    svg.attr("transform", d3.event.transform)
                 }))
                 .append("g")
-                    .attr("translate(" + margin.left + "," + margin.top + ")");
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Function for mapping the magnitude of an earthquake to radius of the dot
     var r = d3.scaleLinear()
@@ -54,61 +54,36 @@ var chart = function(data) {
                         });
         });
     };
-      // Simple
-      var data = [0, 0.005, 0.01, 0.015, 0.02, 0.1];
 
-      var sliderSimple = d3
-        .sliderBottom()
-        .min(d3.min(data))
-        .max(d3.max(data))
-        .width(300)
-        .tickFormat(d3.format('.2%'))
-        .ticks(5)
-        .default(0.015)
-        .on('onchange', val => {
-          d3.select('p#value-simple').text(d3.format('.2%')(val));
-        });
+    // Time
+    var dataTime = d3.range(0, 420).map(function(d) {
+    return new Date(1600 + d, 10, 3);
+    });
 
-      var gSimple = d3
-        .select('div#slider-simple')
-        .append('svg')
-        .attr('width', 500)
-        .attr('height', 100)
-        .append('g')
-        .attr('transform', 'translate(30,30)');
+    var sliderTime = d3
+    .sliderBottom()
+    .min(d3.min(dataTime))
+    .max(d3.max(dataTime))
+    .step(1000 * 60 * 60 * 24 * 365)
+    .width(300)
+    .tickFormat(d3.timeFormat('%Y'))
 
-      gSimple.call(sliderSimple);
+    .default(new Date(1998, 10, 3))
+    .on('onchange', val => {
+      d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
+    });
 
-      d3.select('p#value-simple').text(d3.format('.2%')(sliderSimple.value()));
-      // Time
-      var dataTime = d3.range(0, 420).map(function(d) {
-        return new Date(1600 + d, 10, 3);
-      });
+    var gTime = d3
+    .select('div#slider-time')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
 
-      var sliderTime = d3
-        .sliderBottom()
-        .min(d3.min(dataTime))
-        .max(d3.max(dataTime))
-        .step(1000 * 60 * 60 * 24 * 365)
-        .width(300)
-        .tickFormat(d3.timeFormat('%Y'))
+    gTime.call(sliderTime);
 
-        .default(new Date(1998, 10, 3))
-        .on('onchange', val => {
-          d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
-        });
-
-      var gTime = d3
-        .select('div#slider-time')
-        .append('svg')
-        .attr('width', 500)
-        .attr('height', 100)
-        .append('g')
-        .attr('transform', 'translate(30,30)');
-
-      gTime.call(sliderTime);
-
-      d3.select('p#value-time').text(d3.timeFormat('%Y')(sliderTime.value()));
+    d3.select('p#value-time').text(d3.timeFormat('%Y')(sliderTime.value()));
 
     var drawWorldmap = d3.json(worldmap_data_path).then(function (geojson) {
 
