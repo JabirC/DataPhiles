@@ -18,7 +18,7 @@ def test():
 
 @app.route('/test2', methods = ['GET'])
 def test2():
-        return render_template("test2.html",data=json.dumps(lottery_data))
+        return render_template("test2.html")
 
 @app.route('/test3', methods=['GET'])
 def test3():

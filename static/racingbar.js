@@ -1,6 +1,6 @@
 
 
-//dont edit this file, let me handle it 
+//dont edit this file, let me handle it
 
 
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
@@ -40,7 +40,7 @@ var yValue = function(d) { return d["number"];},
 var chart = function(dataset) {
   console.log("xxxxx");
   var i;
-  
+
   for(i = 0; i<75;i++){
     uni_data.push({
       number: 0,
@@ -66,7 +66,7 @@ var svg = d3.select("body").append("svg")
       .attr('y', '0')
       .attr('x', '150')
       .attr('id','month')
-      
+
   let year_1 = svg.append("text")
     .text("year: " + year)
     .attr('class','title')
@@ -84,7 +84,7 @@ var svg = d3.select("body").append("svg")
   //https://stackoverflow.com/questions/1669190/find-the-min-max-element-of-an-array-in-javascript
   var p_min = Math.min.apply(null, uni_freq_array()),
       p_max = Math.max.apply(null, uni_freq_array());
-  
+
     svg.append("g")
       .attr("class", "x_axis")
       .attr("transform", "translate(15," + height + ")")
@@ -97,13 +97,13 @@ var svg = d3.select("body").append("svg")
       .attr("y", -6)
       .attr("fill","black")
       .style("text-anchor", "end")
-  
-  
+
+
  var helper = svg.selectAll(".bar")
       .data(uni_data)
     .enter()
        .append("g");
-       
+
         helper.append("rect")
            // .attr("class", "dot")
             .attr("width", x_num)
@@ -112,7 +112,7 @@ var svg = d3.select("body").append("svg")
             .attr("y", (y_num_4bar))
             .style("fill", function(d) { return "blue";})
             .text(y_num)
-        
+
         helper.append("text")
         	.text(y_num_4txt)
         	.attr("class","title")
@@ -227,7 +227,7 @@ var top_1 = function(){
   var big = 0;
   var index = 0;
   var i = 0;
-  
+
   while(i < items.length){
     if(big < items[i]){
       big = items[i];
@@ -268,7 +268,7 @@ var top_6 = function(){
         t = big_5;
         big_5 = big_6;
         big_6 = t;
-       
+
         t = num_5;
         num_5 = num_6
         num_6 = t;
@@ -277,7 +277,7 @@ var top_6 = function(){
         t = big_4;
         big_4 = big_5;
         big_5 = t;
-       
+
         t = num_4;
         num_4 = num_5
         num_5 = t;
@@ -286,7 +286,7 @@ var top_6 = function(){
         t = big_3;
         big_3 = big_4;
         big_4 = t;
-       
+
         t = num_3;
         num_3 = num_4
         num_4 = t;
@@ -295,7 +295,7 @@ var top_6 = function(){
         t = big_2;
         big_2 = big_3;
         big_3 = t;
-       
+
         t = num_2;
         num_2 = num_3
         num_3 = t;
@@ -304,7 +304,7 @@ var top_6 = function(){
         t = big_1;
         big_1 = big_2;
         big_2 = t;
-       
+
         t = num_1;
         num_1 = num_2
         num_2 = t;
@@ -316,17 +316,17 @@ var top_6 = function(){
   holder[3] = num_4;
   holder[4] = num_5;
   holder[5] = num_6;
-  
+
   holder_d[0] = big_1;
   holder_d[1] = big_2;
   holder_d[2] = big_3;
   holder_d[3] = big_4;
   holder_d[4] = big_5;
   holder_d[5] = big_6;
-  
 
 
-  console.log("Current Top 6 number is: " + holder[0].toString() + " " + 
+
+  console.log("Current Top 6 number is: " + holder[0].toString() + " " +
     holder[1].toString() + " " + holder[2].toString() + " " + holder[3].toString() +
     " " + holder[4].toString() + " " + holder[5].toString());
 }
