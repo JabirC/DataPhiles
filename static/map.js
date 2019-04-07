@@ -1,5 +1,10 @@
-var startYear, endYear;
-var minMag, maxMag;
+var yearRange;
+var magRange;
+
+// Returns whether n is included in a range of numbers (inclusive)
+var inRange = function (n, range){
+    return range[1] >= n && n >= range[0]
+}
 
 var chart = function(data) {
     var earthquake_data_path = "/earthquakesdata";
@@ -33,19 +38,13 @@ var chart = function(data) {
     var updatePlot = function () {
         let dots = svg.selectAll("circle")
         dots.filter(function (d) {
-                return endYear < d["YEAR"] ||
-                       startYear > d["YEAR"] ||
-                       maxMag < d["EQ_PRIMARY"] ||
-                       minMag > d["EQ_PRIMARY"];
+                return !(inRange(d["YEAR"], yearRange) && inRange(d["EQ_PRIMARY"], magRange));
             })
             .transition()
             .duration(1000)
                 .attr("r", 0);
         dots.filter(function (d) {
-                return endYear >= d["YEAR"] &&
-                       startYear <= d["YEAR"] &&
-                       maxMag >= d["EQ_PRIMARY"] &&
-                       minMag <= d["EQ_PRIMARY"];
+                return inRange(d["YEAR"], yearRange) && inRange(d["EQ_PRIMARY"], magRange);
             })
             .transition()
             .duration(1000)
@@ -91,9 +90,7 @@ var chart = function(data) {
         .default([1600, 2019])
         .fill("#2196f3")
         .on('onchange', val => {
-            console.log(val);
-            startYear = val[0];
-            endYear = val[1];
+            yearRange = val;
             updatePlot();
         });
 
@@ -105,8 +102,7 @@ var chart = function(data) {
         .fill("#2196f3")
         .default([0, 10])
         .on('onchange', val => {
-            minMag = val[0];
-            maxMag = val[1];
+            magRange = val;
             updatePlot();
         });
 
