@@ -1,7 +1,5 @@
 var startYear = 1600;
 
-var earthquake_data;
-
 var chart = function(data) {
     var earthquake_data_path = "/earthquakesdata";
     var worldmap_data_path = "/worldmapdata";
@@ -32,15 +30,14 @@ var chart = function(data) {
               .range(["#00FF00", "#FF0000"]);
 
     var updatePlot = function () {
-        let circles = svg.selectAll("circle")
-        circles.filter(function (d) {
+        let dots = svg.selectAll("circle")
+        dots.filter(function (d) {
                 return d["YEAR"] < startYear;
             })
             .transition()
             .duration(1000)
                 .attr("r", 0);
-        circles.selectAll("circle")
-            .filter(function (d) {
+        dots.filter(function (d) {
                 return d["YEAR"] > startYear;
             })
             .transition()
