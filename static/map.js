@@ -1,5 +1,5 @@
-var yearRange;
-var magRange;
+var yearRange = [1600, 2019]
+var magRange = [0, 10];
 
 // Returns whether n is included in a range of numbers (inclusive)
 var inRange = function (n, range){
@@ -12,8 +12,8 @@ var chart = function(data) {
 
 
     var margin = {top : 0, left: 0, right: 0, bottom: 0},
-        height = 600 - margin.top - margin.bottom,
-        width = 1200 - margin.left - margin.right;
+        height = 525 - margin.top - margin.bottom,
+        width = 1000 - margin.left - margin.right;
 
     var svg = d3.select("#map")
                 .append("svg")
@@ -28,8 +28,8 @@ var chart = function(data) {
 
     // Function for mapping the magnitude of an earthquake to radius of the dot
     var r = d3.scaleLinear()
-              .domain([2, 10])
-              .range([0, 10]);
+              .domain([0, 10])
+              .range([5, 15]);
 
     var c = d3.scaleLinear()
               .domain([2, 10])
@@ -56,9 +56,12 @@ var chart = function(data) {
     // Takes in a projection to use and plots each earthquake on the map
     var plotQuakes = function (projection) {
         d3.tsv(earthquake_data_path).then(function (data) {
-            earthquake_data = data;
+            // Some earthquakes don't have magnitude data, so get rid of them
+            earthquake_data = data.filter(function (d) {
+                return d["EQ_PRIMARY"] !== "";
+            });
             svg.selectAll("circle")
-                .data(data)
+                .data(earthquake_data)
                 .enter()
                 .append("circle")
                     .attr("cx", function(d) {
@@ -78,16 +81,21 @@ var chart = function(data) {
                         // EQ_PRIMARY denotes the magnitude of the earthquake
                         .attr("r", function(d) {
                             return r(d["EQ_PRIMARY"]);
-                        });
+                        })
+            svg.selectAll("circle")
+                .append("title")
+                    .text(function (d) {
+                        return (d["YEAR"] + " " + d["COUNTRY"] + ":" + d["EQ_PRIMARY"])
+                    });
         });
     };
 
     // Time
     var sliderTime = d3.sliderBottom()
-        .domain([1600, 2019])
+        .domain(yearRange)
         .width(400)
         .tickFormat(d3.format("d"))
-        .default([1600, 2019])
+        .default(yearRange)
         .fill("#2196f3")
         .on('onchange', val => {
             yearRange = val;
@@ -95,12 +103,12 @@ var chart = function(data) {
         });
 
     var sliderMag = d3.sliderBottom()
-        .domain([0, 10])
+        .domain(magRange)
         .step(0.1)
         .width(400)
         .tickFormat(d3.format('.2s'))
         .fill("#2196f3")
-        .default([0, 10])
+        .default(magRange)
         .on('onchange', val => {
             magRange = val;
             updatePlot();
