@@ -15,6 +15,7 @@
 				<script src="https://d3js.org/d3.v5.min.js"></script>
 				<script src="https://unpkg.com/d3-simple-slider"></script>
 				<script>
+				numdate = 1900
 				var chart = function(data) {
 				    var earthquake_data_path = "/earthquakesdata";
 				    var worldmap_data_path = "/worldmapdata";
@@ -51,7 +52,7 @@
 				                .data(data)
 				                .enter()
 				                .append("circle")
-												.filter(function(d) { return d["YEAR"] == 2011})
+												.filter(function(d) { return d["YEAR"] == numdate})
 				                    .attr("cx", function(d) {
 				                        let point = [d["LONGITUDE"], d["LATITUDE"]];
 				                        return projection(point)[0];
@@ -74,8 +75,9 @@
 				    };
 				      // Time
 				      var dataTime = d3.range(0, 420).map(function(d) {
-				        return new Date(1600 + d, 10, 3);
+								return new Date(1600 + d, 10, 3);
 				      });
+
 
 				      var sliderTime = d3
 				        .sliderBottom()
@@ -85,7 +87,7 @@
 				        .width(300)
 				        .tickFormat(d3.timeFormat('%Y'))
 
-				        .default(new Date(1998, 10, 3))
+				        .default(new Date(numdate, 10, 3))
 				        .on('onchange', val => {
 				          d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
 				        });
