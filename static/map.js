@@ -1,3 +1,5 @@
+var startYear = 1600;
+
 var chart = function(data) {
     var earthquake_data_path = "/earthquakesdata";
     var worldmap_data_path = "/worldmapdata";
@@ -27,9 +29,28 @@ var chart = function(data) {
               .domain([2, 10])
               .range(["#00FF00", "#FF0000"]);
 
+    var updatePlot = function () {
+        let dots = svg.selectAll("circle")
+        dots.filter(function (d) {
+                return d["YEAR"] < startYear;
+            })
+            .transition()
+            .duration(1000)
+                .attr("r", 0);
+        dots.filter(function (d) {
+                return d["YEAR"] > startYear;
+            })
+            .transition()
+            .duration(1000)
+                .attr("r", function(d) {
+                    return r(d["EQ_PRIMARY"]);
+                });
+    };
+
     // Takes in a projection to use and plots each earthquake on the map
     var plotQuakes = function (projection) {
         d3.tsv(earthquake_data_path).then(function (data) {
+            earthquake_data = data;
             svg.selectAll("circle")
                 .data(data)
                 .enter()
@@ -57,29 +78,31 @@ var chart = function(data) {
 
     // Time
     var dataTime = d3.range(0, 420).map(function(d) {
-    return new Date(1600 + d, 10, 3);
+        return new Date(1600 + d, 10, 3);
     });
 
     var sliderTime = d3
-    .sliderBottom()
-    .min(d3.min(dataTime))
-    .max(d3.max(dataTime))
-    .step(1000 * 60 * 60 * 24 * 365)
-    .width(300)
-    .tickFormat(d3.timeFormat('%Y'))
+        .sliderBottom()
+        .min(d3.min(dataTime))
+        .max(d3.max(dataTime))
+        .step(1000 * 60 * 60 * 24 * 365)
+        .width(300)
+        .tickFormat(d3.timeFormat('%Y'))
 
-    .default(new Date(1998, 10, 3))
-    .on('onchange', val => {
-      d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
-    });
+        .default(new Date(startYear, 1, 1))
+        .on('onchange', val => {
+            startYear = d3.timeFormat('%Y')(val);
+            d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
+            updatePlot();
+        });
 
     var gTime = d3
-    .select('div#slider-time')
-    .append('svg')
-    .attr('width', 500)
-    .attr('height', 100)
-    .append('g')
-    .attr('transform', 'translate(30,30)');
+        .select('div#slider-time')
+        .append('svg')
+        .attr('width', 500)
+        .attr('height', 100)
+        .append('g')
+        .attr('transform', 'translate(30,30)');
 
     gTime.call(sliderTime);
 
@@ -105,3 +128,4 @@ var chart = function(data) {
         plotQuakes(projection);
     });
 };
+
