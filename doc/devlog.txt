@@ -100,3 +100,8 @@ jabirC -- 2019-04-08 00:18
 Cleaned up, deleted unnecessary files
 Updated mockup.png to reflect current visual
 ==============================================================
+
+jabirC -- 2019-04-08 02:38
+--------------------------------------------------------------
+Updated Readme to reflect current dataset(earthquakes)
+==============================================================

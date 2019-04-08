@@ -28,17 +28,14 @@ var chart = function(data) {
 
     // Function for mapping the magnitude of an earthquake to radius of the dot
     var r = d3.scaleLinear()
-              .domain([0, 10])
-              .range([1, 10]);
-
-
+              .domain([0,10])
+              .range([1, 15]);
     var c = d3.scaleLinear()
               .domain([2, 10])
-              .range(["#ECD078", "#C02942"]);
-
+              .range(["#00ff00", "#C02942"]);
     var t = d3.scaleLinear()
               .domain([1, 10])
-              .range([0.3, 0.7]);
+              .range([0.1, 1.0]);
 
 
     var updatePlot = function () {
@@ -58,7 +55,7 @@ var chart = function(data) {
                     return r(d["EQ_PRIMARY"]);
                 });
     };
-
+    
     // Takes in a projection to use and plots each earthquake on the map
     var plotQuakes = function (projection) {
         d3.tsv(earthquake_data_path).then(function (data) {
@@ -97,7 +94,7 @@ var chart = function(data) {
                     .text(function (d) {
                         return (d["YEAR"] + " " + d['LOCATION_NAME'] + ":" + d["EQ_PRIMARY"])
                     });
-                  
+
         });
     };
 

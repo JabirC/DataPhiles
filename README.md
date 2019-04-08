@@ -14,24 +14,28 @@ Our data set contains a set of earthquakes with information including coordinate
 We plan to bring our data to life through an interactive map that comes with sliders!
 
 #### Map
-The map itself is zoomable and draggable, so you can rearrange how much space it takes up on the screen and zoom in to inspect a particular region that has a high prevalence of earthquakes. 
+The map itself is zoomable and draggable, so you can rearrange how much space it takes up on the screen and zoom in to inspect a particular region that has a high prevalence of earthquakes.
 
 #### Earthquakes
-The earthquakes themselves are represented by colorful circles of varying radii. The radius of a circle corresponds to the strength, or magnitude, of the earthquake. The circles are slightly transparent in order to allow for more of them to be distinguishable from the others. 
+The earthquakes themselves are represented by colorful circles of varying radii. The radius of a circle corresponds to the strength, or magnitude, of the earthquake. The circles are slightly transparent in order to allow for more of them to be distinguishable from the others.
 
 #### Sliders
-The sliders are what bring the user into the equation! Earthquakes will only appear when they satisfy the criteria set by the user via the draggable sliders. The sliders will create a range based on two categories for now, those being time and magnitude. Let's say that the user sets the lower end of the earthquake slider to 1600 and the upper end to 2019 (i.e., full slider). This will cause all earthquakes that happened between those years to appear at their locations on the map. If the user shortened the time frame to 1800 to 1900, only those earthquakes would be shown, with the earthquakes that are no longer in the time frame slowly shrinking as they transition out of existence. 
+The sliders are what bring the user into the equation! Earthquakes will only appear when they satisfy the criteria set by the user via the draggable sliders. The sliders will create a range based on two categories for now, those being time and magnitude. Let's say that the user sets the lower end of the earthquake slider to 1600 and the upper end to 2019 (i.e., full slider). This will cause all earthquakes that happened between those years to appear at their locations on the map. If the user shortened the time frame to 1800 to 1900, only those earthquakes would be shown, with the earthquakes that are no longer in the time frame slowly shrinking as they transition out of existence.
 
-Similarly, by adjusting the magnitude slider, the user can determine what range of magnitude the earthquakes that are displayed must fall into. By playing around with the sliders and deviating from the default that they are set to, the user can explore questions like which years had higher prevalences of low magnitude earthquakes versus which ones had higher prevalence of higher magnitude earthquakes, and which areas were chiefly targetted in both of these relationships. 
+Similarly, by adjusting the magnitude slider, the user can determine what range of magnitude the earthquakes that are displayed must fall into. By playing around with the sliders and deviating from the default that they are set to, the user can explore questions like which years had higher prevalences of low magnitude earthquakes versus which ones had higher prevalence of higher magnitude earthquakes, and which areas were chiefly targetted in both of these relationships.
 
 ### Explanation of D3 feature utilization.
+Enter statements will be used when data is used to render the initial data points.
+Afterwards, enter as well as exit statements will be used when the user shifts the sliders.
 
-Since we are creating a racing bar chart, we will use update to periodically change the values of each bar. The "racing" element of our data visualization comes into effect when the value of a bar exceeds or goes below the value of another bar. Our bar chart orders the the bars from the higest value to the lowest value. Since we are representing the data for number patterns in lottery numbers, the value of a bar representing a pattern indicates how prevalent that pattern is. This means that the most prevalent pattern will be at the top and the "least" prevalent will be at the bottom. I put least in quotations because it isn't necessarily the least prevalent pattern given the fact that there are many patterns and we can't show them all concurrently. Therefore, we will only show the 6 most prevalent pattern at a time and the 6th most prevalent pattern would be considered the "least" visually.
+Transitions comes into play when there is a shift in the sliders. The shift marks a change in the year range or the magnitude range of our
+visual data. These changes may bring about more data onto the world map or they may decrease the data points on the current map. These
+additions and deletions will be done through transitions as the circles will slowly pop up until it is full size or slowly decrease in size
+until its not there anymore.
 
-Transitions comes into play when there is a shift in the ranks of bars. When a pattern overtakes another, we will swap the positions of the bars through a smooth transition. In the case where a pattern that isn't in the original 6 patterns, which are visually represented, overtakes one of the 6 patterns, we will use exit to remove the bar progression of the pattern which the new pattern exceeded. Then we will use enter to show the progression of the new pattern. Over time, our scale for the x-axis will change depending on the value of the most prevalent pattern.
+User Interactivity is essentially changing the values of the sliders in order to sort through the visual data. Users may also hover on top of data points in order to see a detailed description of the location and time of the earthquake as well as the magnitude. In addition, users can also zoom in and zoom out of the map as well as drag the map itself in any direction.
 
-By default, our data visualization will keep track of all the patterns that we have come up with. However, we will implement a user interactive feature where the user can explicitly decide which patterns they want to keep track of or which patterns they no longer want to keep track of. We will also allow the users to change the period which we update the values. For example, users can change the period from weeks to months or from months to years and other variations. In addition, users will also be allowed to select a start date and an end date.
-
+Our project will be most similar to the WorldBank contract awards visualization in that it contains a map of the world and has data points in the form of circles on top of countries.
 ### Sketch/Mock-up of envisioned visualization
 ![alt text](https://raw.githubusercontent.com/jabirC/DataPhiles/master/mockup.png)
 
