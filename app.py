@@ -5,7 +5,6 @@ from flask import *
 import os
 import json
 
-
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
 
@@ -24,4 +23,5 @@ def earthquake_map():
         return send_file("data/earthquakes.tsv")
 
 if __name__ == "__main__":
+	app.debug = True
 	app.run()
