@@ -3,7 +3,7 @@
 
 ### Description of data set(s).
 
-[Link to data set:](https://www.ngdc.noaa.gov/nndc/struts/results?bt_0=&st_0=&type_17=EXACT&query_17=None%20Selected&op_12=eq&v_12=&type_12=Or&query_14=None%20Selected&type_3=Like&query_3=&st_1=&bt_2=&st_2=&bt_1=&bt_4=&st_4=&bt_5=&st_5=&bt_6=&st_6=&bt_7=&st_7=&bt_8=&st_8=&bt_9=&st_9=&bt_10=&st_10=&type_11=Exact&query_11=&type_16=Exact&query_16=&bt_18=&st_18=&ge_19=&le_19=&type_20=Like&query_20=&display_look=1&t=101650&s=1&submit_all=Search%20Database&fbclid=IwAR3M6RsgdmfTbTgj34eXx_sWNZqaQ4Tup2oMudcV-1XVBtlFuqYzvdphDQg)/
+[Link to data set](https://www.ngdc.noaa.gov/nndc/struts/results?bt_0=&st_0=&type_17=EXACT&query_17=None%20Selected&op_12=eq&v_12=&type_12=Or&query_14=None%20Selected&type_3=Like&query_3=&st_1=&bt_2=&st_2=&bt_1=&bt_4=&st_4=&bt_5=&st_5=&bt_6=&st_6=&bt_7=&st_7=&bt_8=&st_8=&bt_9=&st_9=&bt_10=&st_10=&type_11=Exact&query_11=&type_16=Exact&query_16=&bt_18=&st_18=&ge_19=&le_19=&type_20=Like&query_20=&display_look=1&t=101650&s=1&submit_all=Search%20Database&fbclid=IwAR3M6RsgdmfTbTgj34eXx_sWNZqaQ4Tup2oMudcV-1XVBtlFuqYzvdphDQg)
 
 Have you ever worried about your whole world being shaken up? Are you interested in some of the most dangerous yet fascinating things Mother Nature has to offer us? If you too are perplexed by earthquakes, our project allows for an interactive visualization of those pesky natural disasters!
 
