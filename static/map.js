@@ -55,7 +55,7 @@ var chart = function(data) {
                     return r(d["EQ_PRIMARY"]);
                 });
     };
-    
+
     // Takes in a projection to use and plots each earthquake on the map
     var plotQuakes = function (projection) {
         d3.tsv(earthquake_data_path).then(function (data) {
@@ -156,7 +156,7 @@ var chart = function(data) {
             .enter()
             .append("path")
                 .attr("d", path)
-                .style("fill", "black")
+                .style("fill", "lightblue")
                 .style("stroke", "#888888");
         plotQuakes(projection);
     });

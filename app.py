@@ -24,5 +24,4 @@ def earthquake_map():
         return send_file("data/earthquakes.tsv")
 
 if __name__ == "__main__":
-	app.debug = True
 	app.run()

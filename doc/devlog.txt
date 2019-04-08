@@ -92,7 +92,7 @@ Filter based on magnitude
 jabirC -- 2019-04-07 20:26
 --------------------------------------------------------------
 -Wrote the design doc
--updated colors on world map to make it visually appeling
+-updated colors on world map to make it visually appealing
 ==============================================================
 
 jabirC -- 2019-04-08 00:18
