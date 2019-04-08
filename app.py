@@ -1,28 +1,17 @@
 # Team DataPhiles
 
 from flask import *
+
 import os
 import json
-from pprint import pprint
+
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
 
 @app.route('/', methods=['GET'])
 def home():
-	return render_template("index.html")
-
-@app.route('/test', methods = ['GET'])
-def test():
-        return render_template("map.html")
-
-@app.route('/test2', methods = ['GET'])
-def test2():
-        return render_template("test2.html")
-
-@app.route('/test3', methods=['GET'])
-def test3():
-	return render_template("slider.html")
+	return render_template("map.html")
 
 # Below are URLs to send data files to the JS code
 

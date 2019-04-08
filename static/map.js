@@ -18,7 +18,7 @@ var chart = function(data) {
     var svg = d3.select("#map")
                 .append("svg")
                 .attr("height", height + margin.top + margin.bottom)
-                .attr("width", width + margin.left + margin.right)
+                .attr("width", width + margin.left + margin.right + 1000)
                 // this allows the svg to be zoomed and dragged with black magic
                 .call(d3.zoom().on("zoom", function () {
                     svg.attr("transform", d3.event.transform)
@@ -31,12 +31,15 @@ var chart = function(data) {
               .domain([0, 10])
               .range([1, 10]);
 
-    var c = d3.scaleLinear()
-              .domain([2, 10])
-              .range(["#0000FF", "#FF0000"]);
+
     var c = d3.scaleLinear()
               .domain([2, 10])
               .range(["#ECD078", "#C02942"]);
+
+    var t = d3.scaleLinear()
+              .domain([1, 10])
+              .range([0.3, 0.7]);
+
 
     var updatePlot = function () {
         let dots = svg.selectAll("circle")
@@ -71,7 +74,9 @@ var chart = function(data) {
                         let point = [d["LONGITUDE"], d["LATITUDE"]];
                         return projection(point)[0];
                     })
-                    .attr('fill-opacity', 0.5)
+                    .attr('fill-opacity', function(d) {
+                        return t(d["EQ_PRIMARY"]);
+                    })
                     .attr("cy", function(d) {
                         let point = [d["LONGITUDE"], d["LATITUDE"]];
                         return projection(point)[1];
@@ -86,11 +91,13 @@ var chart = function(data) {
                         .attr("r", function(d) {
                             return r(d["EQ_PRIMARY"]);
                         })
+
             svg.selectAll("circle")
                 .append("title")
                     .text(function (d) {
-                        return (d["YEAR"] + " " + d["COUNTRY"] + ":" + d["EQ_PRIMARY"])
+                        return (d["YEAR"] + " " + d['LOCATION_NAME'] + ":" + d["EQ_PRIMARY"])
                     });
+                  
         });
     };
 
