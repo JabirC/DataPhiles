@@ -29,11 +29,14 @@ var chart = function(data) {
     // Function for mapping the magnitude of an earthquake to radius of the dot
     var r = d3.scaleLinear()
               .domain([0, 10])
-              .range([5, 15]);
+              .range([1, 10]);
 
     var c = d3.scaleLinear()
               .domain([2, 10])
-              .range(["#00FF00", "#FF0000"]);
+              .range(["#0000FF", "#FF0000"]);
+    var c = d3.scaleLinear()
+              .domain([2, 10])
+              .range(["#ECD078", "#C02942"]);
 
     var updatePlot = function () {
         let dots = svg.selectAll("circle")
@@ -41,13 +44,13 @@ var chart = function(data) {
                 return !(inRange(d["YEAR"], yearRange) && inRange(d["EQ_PRIMARY"], magRange));
             })
             .transition()
-            .duration(1000)
+            .duration(2000)
                 .attr("r", 0);
         dots.filter(function (d) {
                 return inRange(d["YEAR"], yearRange) && inRange(d["EQ_PRIMARY"], magRange);
             })
             .transition()
-            .duration(1000)
+            .duration(2000)
                 .attr("r", function(d) {
                     return r(d["EQ_PRIMARY"]);
                 });
@@ -68,6 +71,7 @@ var chart = function(data) {
                         let point = [d["LONGITUDE"], d["LATITUDE"]];
                         return projection(point)[0];
                     })
+                    .attr('fill-opacity', 0.5)
                     .attr("cy", function(d) {
                         let point = [d["LONGITUDE"], d["LATITUDE"]];
                         return projection(point)[1];
@@ -148,9 +152,8 @@ var chart = function(data) {
             .enter()
             .append("path")
                 .attr("d", path)
-                .style("fill", "#cccccc")
+                .style("fill", "black")
                 .style("stroke", "#888888");
         plotQuakes(projection);
     });
 };
-
