@@ -1,16 +1,4 @@
-.chart rect {
-  fill: steelblue;
-}
-
-.chart text {
+body {
   fill: black;
-  font: 10px sans-serif;
-  text-anchor: end;
-}
-
-.tooltip {
-  position: absolute;
-  width: 200px;
-  height: 28px;
-  pointer-events: none;
+  font: 12px sans-serif;
 }
